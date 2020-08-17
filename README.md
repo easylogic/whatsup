@@ -47,7 +47,7 @@ To prevent CORS problems, please Add `HOST` and `PORT` to the start script.
 
 ```js
   "scripts": {
-    "start": "HOST=local.your-test-domaina.com PORT=5300 react-scripts start --progress",
+    "start": "HOST=local.your-test-domain.com PORT=5300 react-scripts start --progress",
   }
 ```
 
