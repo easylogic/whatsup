@@ -37,6 +37,8 @@ export default {
 
 
 ```sh
+git clone https://github.com/easylogic/whatsup 
+cd whatsup
 yarn 
 yarn start 
 ```
