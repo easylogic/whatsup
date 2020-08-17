@@ -94,13 +94,13 @@ export default function ObjectInput (props: ObjectInputProps) {
 
     function onChangeField(field: string, value: any) {
         const customValues = {...localInputValues, [field]: value}
-        onChange(item.name, JSON.stringify(customValues, null, 4));
+        onChange(item.name, customValues);
         setLocalInputValues(customValues)      
     }
 
     function onChangeValues(valueString: string) {
         const customValues = JSON.parse(valueString)
-        onChange(item.name, JSON.stringify(customValues, null, 4));
+        onChange(item.name, customValues);
         setLocalInputValues(customValues)        
     }
 
@@ -169,11 +169,10 @@ export default function ObjectInput (props: ObjectInputProps) {
     }
 
     const inputValueJSONString = localInputValues ? JSON.stringify(localInputValues, null, 4) : schemaToJSON(schema || {}, responseObject.definitions)
-
     return (
         <Tabs defaultActiveKey="1">
             <TabPane tab="Data" key="1">
-                <div style={{padding: '0 10px', border: '1px solid #ececec', borderRadius: 4}}>
+                <div style={{padding: '5px 10px', border: '1px solid #ececec', borderRadius: 4}}>
                     {Object.keys(schema?.properties || []).map((key, index) => {
                         return createFormItem({ 
                             name: key, 

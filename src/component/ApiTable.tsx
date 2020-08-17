@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {Button, Row, Col, Tabs, Badge } from 'antd';
 import { useRecoilState } from 'recoil';
 
-import {responseState} from '../state/response-state'
+import {responseState, categoryState, apiState} from '../state/response-state'
 import { APIParameter } from '../constant/api';
 
 import FileInput from './items/FileInput';
@@ -13,13 +13,9 @@ import TagsInput from './items/TagsInput';
 import NumberInput from './items/NumberInput';
 import ObjectInput from './items/ObjectInput';
 
-import {getDefinitions} from '../util/get-definitions';
+import {getDefinitions, getApiJSON, clone} from '../util/get-definitions';
 
 interface ApiTableProps {
-    swaggerJSON: any,
-    parameters: APIParameter[];
-    definitions: any;
-    api: any;
     handleApiParams: (values: any) => void; 
 }
 
@@ -84,9 +80,17 @@ declare global {
 }
 
 export function ApiTable(props: ApiTableProps) {
-    const { parameters, definitions,swaggerJSON: json, api, handleApiParams } = props;
+    const { handleApiParams } = props;
+    const [category] = useRecoilState(categoryState);
+    const [api] = useRecoilState(apiState);
+
     const [isLoading, setLoading] = useState(false);
     const [responseObject] = useRecoilState(responseState);    
+    const [inc, setInc] = useState(0);
+
+    const json = getApiJSON(category);       
+    const parameters = api?.object?.parameters;
+    const definitions = json.definitions
 
     const urlKey = `https://${json.host}${json.basePath}${api.path}-${api.method}`
     const SAVE_GLOBAL_INPUT_VALUES_KEY =  `save-${urlKey}`
@@ -119,6 +123,9 @@ export function ApiTable(props: ApiTableProps) {
         inputValues[field] = value; 
 
         saveGlobalInputValues();
+
+        // for re-rendering 
+        setInc(inc+1);
     }
 
     function saveGlobalInputValues () {
@@ -174,7 +181,7 @@ export function ApiTable(props: ApiTableProps) {
             </div>;
         }
 
-        const inputValues = getFieldValue(it.name)
+        const inputValues = clone(getFieldValue(it.name))
 
         return (
             <Row style={{paddingTop: 10}} gutter={10} key={`row-${rowIndex}`}>
@@ -227,12 +234,14 @@ export function ApiTable(props: ApiTableProps) {
             schema = it.schema;
         }
 
+        const inputValues = {...(getFieldValue(it.name) || {})}
+
         return (
             <Row style={{paddingTop: 10}} key={`key-${it.name}`}>
                 <Col span={4} style={{wordBreak: 'break-all'}}>{it.name}</Col>
                 <Col span={20}>
                     description - {it.description}
-                    <ObjectInput inputValues={JSON.parse(getFieldValue(it.name) || "{}")} item={it} schema={schema} onChange={handleChangeValue} />
+                    <ObjectInput inputValues={inputValues} item={it} schema={schema} onChange={handleChangeValue} />
                 </Col>
             </Row>
         )

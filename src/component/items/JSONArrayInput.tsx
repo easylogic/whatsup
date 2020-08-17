@@ -4,7 +4,7 @@ import {Row, Col, Button } from 'antd';
 
 import SubObjectInput from './SubObjectInput';
 import { useRecoilState } from 'recoil';
-import { getDefinitions } from '../../util/get-definitions';
+import { getDefinitions, clone } from '../../util/get-definitions';
 import { responseState } from '../../state/response-state';
 import NumberInput from './NumberInput';
 import BooleanInput from './BooleanInput';
@@ -79,10 +79,14 @@ export default function JSONArrayInput (props: JSONInputProps) {
         changeFieldValue(index, field, value);
     }
 
+    function getFieldValue (index: number, name: string) {
+        return inputValues[index] && inputValues[index][name]
+    }
+
     function makeNoSchemaInput (index: number, key: string, it: any, schema: any) {
 
         it = {...it, name: key}
-        const arrayInputValues = localInputValues[index]?.[key]
+        const arrayInputValues = clone(getFieldValue(index, key))
 
         if(['number', 'integer', 'float', 'double', 'int32', 'int64'].includes(it.type)) {
             return <NumberInput item={it} inputValues={arrayInputValues} onChange={(_: any, value) => {
@@ -147,7 +151,7 @@ export default function JSONArrayInput (props: JSONInputProps) {
         // )}              
         
         it = {...it, name: key}
-        let arrayInputValues = localInputValues[index]?.[key]
+        const arrayInputValues = clone(getFieldValue(index, key))
 
         if(schema && it.type === 'array') {
             return <JSONArrayInput item={{...schema, name: key}}  inputValues={arrayInputValues}  schema={schema} onChange={(_, value) => {
@@ -178,8 +182,7 @@ export default function JSONArrayInput (props: JSONInputProps) {
     
     return (
         <div style={{
-            backgroundColor: "rgba(0, 0, 0, 0.05)", 
-            boxShadow:"0 0 0 0 rgba(0, 0, 0, 0.1)", 
+            border: '1px solid #ececec',
             padding: 5, 
             borderRadius: 4
         }}> 
@@ -190,7 +193,7 @@ export default function JSONArrayInput (props: JSONInputProps) {
 
             {localInputValues.map( (listItem: any, index: number) => {
                 return <div key={`index-${index}`}>
-                    <hr style={{border: 'none', borderTop: '1px solid #dcdcdc'}} />                       
+                    <hr style={{border: 'none', borderTop: '1px solid #ececec'}} />                       
                     {inputList.map(inputItem => {
                         const it = inputItem.value; 
                         let schema = null; 
@@ -209,8 +212,8 @@ export default function JSONArrayInput (props: JSONInputProps) {
 
                         return (
                             <Row key={inputItem.key} style={{marginBottom: 1}}>
-                                <Col span={3}> {inputItem.key} </Col>
-                                <Col span={21}>
+                                <Col span={4}> {inputItem.key} </Col>
+                                <Col span={20}>
 
                                     {((hasNotSchema) && makeNoSchemaInput(index, inputItem.key, it, schema))}
                                     {((hasSchema) && makeSchemaInput(index, inputItem.key, it, schema))}

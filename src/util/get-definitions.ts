@@ -12,6 +12,10 @@ export const getCategoryName = (): string => {
   return localStorage.getItem('category') || firstCategory
 }
 
+export  const setCategoryNameForLocalStorage = (category: string) => {
+    localStorage.setItem('category', category);
+}    
+
 export const getApiJSON = (category?: string) => {
     return swaggerJSON[category || getCategoryName()]
 }

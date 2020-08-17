@@ -9,7 +9,6 @@ interface TextAreaInputProps {
 
 export default function TextInput (props: TextAreaInputProps) {
     const { inputValues, onChange } = props; 
-
     return <Input.TextArea rows={20} value={inputValues} onChange ={(e) => {
                 onChange(e.target.value)
             }}
