@@ -43,12 +43,21 @@ yarn start
 
 ### Change HOST and PORT
 
-Add `HOST` and `PORT` to the start script.
+To prevent CORS problems, please Add `HOST` and `PORT` to the start script.
 
 ```js
   "scripts": {
     "start": "HOST=local.your-test-domaina.com PORT=5300 react-scripts start --progress",
   }
+```
+
+And you can edit the hosts file.
+
+```sh
+vi /etc/hosts
+
+127.0.0.1   local.your-test-domain.com 
+
 ```
 
 ### Build - `yarn build`
