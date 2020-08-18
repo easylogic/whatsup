@@ -1,9 +1,6 @@
 import React from 'react';
 import { List } from 'antd';
-
-const preStyle: any = { whiteSpace: 'pre-wrap', wordBreak: 'break-all', border: '1px solid #ececec', padding: 10 };
-
-
+import ReactJson from 'react-json-view';
 
 interface ListViewerProps {
     title?: string;
@@ -18,15 +15,20 @@ export default function ListViewer (props: ListViewerProps) {
             <List
                 itemLayout="horizontal"
                 dataSource={json}
-                renderItem={(item: any) => (
-                    <List.Item key={item.code}>
-                        <List.Item.Meta
-                            avatar={`${item.code}`}
-                            title={`${item.description}`}
-                            description={(item.schemaString) ? <pre style={preStyle}>{item.schemaString}</pre> : ''}
-                        />
-                    </List.Item>
-                )}
+                renderItem={(item: any) => {
+
+                    let name = Object.keys(item.schema || {})[0] || ""
+
+                    return (
+                        <List.Item key={item.code}>
+                            <List.Item.Meta
+                                avatar={`${item.code}`}
+                                title={`${item.description}`}
+                                description={(Array.isArray(item.schema)) ? <ReactJson src={item.schema} /> : <ReactJson name={name} src={item.schema} />}
+                            />
+                        </List.Item>
+                    )
+                }}
             />
 
 

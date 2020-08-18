@@ -67,16 +67,70 @@ export const setApiObjectForLocalStorage = (apiObject: APIData) => {
     localStorage.setItem(API_OBJECT, JSON.stringify(apiObject));    
 }
 
+export const getRealReferenceName = (ref: string) => {
+    const fullName = ref
+            .split('definitions/')[1]
 
-export function getDefinitions(item: any, definitions: any) {
-        
-    if (item.$ref) {
-        return definitions[item.$ref.split('definitions/')[1]]
+
+    const className = fullName.split(/»|«/g)
+            .filter(Boolean)
+            .pop() || ""
+
+    return { fullName, className}
+}
+
+export function getDefinitions(item: any, definitions: any): any {
+
+    if (item?.type === 'array') {
+        if (item.items?.$ref) {
+            return [
+                getDefinitions(item.items, definitions)
+            ]
+        }
     }
 
-    return {} 
+    if (item?.$ref) {
+        const refName = getRealReferenceName(item.$ref)
+        const schema = definitions[refName.className]
+
+        Object.keys(schema?.properties || {}).forEach(key => {
+            let prop = schema.properties[key];
+
+            if (prop.$ref) {
+                schema.properties[key] = getDefinitions(prop, definitions)
+            } else if (prop.items?.$ref) {
+                schema.properties[key].items = getDefinitions(prop.items, definitions)
+            }
+
+            if (prop.type) {
+
+                if (prop.type === 'array') { 
+                    schema.properties[key] = [
+                        prop.items
+                    ]
+                } else {
+                    schema.properties[key] = [
+                        prop.type,
+                        prop.format ? `(${prop.format})` : ''
+                    ].join('').trim()
+                }
+
+
+            }
+        })
+
+        const key = `${refName.fullName}`;
+
+        let result = {
+            [key]: schema.properties
+        }
+
+        return result; 
+    }
+
+    return item; 
 }
 
 export function clone (value: any) {
-    return JSON.parse(JSON.stringify(value));
+    return JSON.parse(JSON.stringify(value || ""));
 }

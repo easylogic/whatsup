@@ -2,49 +2,10 @@ import React from 'react';
 import JSONViewer from './viewer/JSONViewer';
 import ListViewer from './viewer/ListViewer';
 import { Tabs, Alert } from 'antd';
+import { getDefinitions } from '../util/get-definitions';
 
 interface ResponseTableProps {
   responseObject: any;
-}
-
-function typeToValue(obj: any) {
-  switch (obj.type) {
-    case 'string':
-      if (obj.enum) {
-        return obj.enum.join(' or ');
-      }
-  }
-
-  return '';
-}
-
-interface JSONInterface {
-  [key: string]: any;
-}
-
-function schemaToJSON(schema: any, definitions: any) {
-  let obj: JSONInterface = {};
-
-  schema = schema || { properties: {} };
-
-  Object.entries(schema.properties || {}).forEach(([key, value]) => {
-    obj[key] = typeToValue(value);
-  });
-
-  return JSON.stringify(obj, null, 4);
-}
-
-function getSchemaObject(schema: any, definitions: any) {
-  if (!schema) return '';
-  if (!schema.$ref) return '';
-
-  const dataObject = schema.$ref
-    .split('definitions/')[1]
-    .split(/»|«/g)
-    .filter(Boolean)
-    .pop();
-
-  return schemaToJSON(definitions[dataObject], definitions);
 }
 
 export function ResponseTable(props: ResponseTableProps) {
@@ -52,12 +13,12 @@ export function ResponseTable(props: ResponseTableProps) {
 
   const dataSource = Object.keys(api?.object?.responses || {}).map((code) => {
     const res = api?.object?.responses[code];
-    let schemaString = getSchemaObject(res.schema, definitions);
+    let schema = getDefinitions(res.schema, definitions);
 
     return {
+      ...res,      
       code,
-      schemaString,
-      ...res,
+      schema,
     };
   });
 
