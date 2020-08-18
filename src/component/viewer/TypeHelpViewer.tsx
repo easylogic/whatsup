@@ -21,7 +21,7 @@ export default function TypeHelpViewer (props: Props) {
                 <div><strong>type</strong>: {it.type || schema.type} </div> 
                 {it.enum ? <div><strong>enum</strong>: {JSON.stringify(it.enum)}</div> : ''}
                 {it.items?.enum ? <div><strong>enum</strong>: {JSON.stringify(it.items?.enum)}</div> : ''}                    
-                {(schema?.type) && (<div><strong>{schema?.type}</strong>`: ${schema?.title || schema?.xml?.name}`</div>)}
+                {(schema?.type) && (<div><strong>{schema?.type}</strong>: ${schema?.title || schema?.xml?.name}</div>)}
             </div>
         )
     }
