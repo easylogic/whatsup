@@ -1,6 +1,6 @@
 import React from 'react';
 import { Layout, Menu, Tag } from 'antd';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import SubMenu from 'antd/lib/menu/SubMenu';
 
 import { responseState, apiState, menuState, menuItemState, categoryViewState } from '../state/response-state';
@@ -29,8 +29,8 @@ function getTag(text: string) {
 
 function ApiMenu() {
   const category = useRecoilValue(categoryViewState);
-  const [ , setApi] = useRecoilState(apiState);
-  const [ , setResponseObject] = useRecoilState(responseState);
+  const setApi = useSetRecoilState(apiState);
+  const setResponseObject = useSetRecoilState(responseState);
   const [menu, setSelectedMenu] = useRecoilState(menuState);
   const [menuItem, setSelectedMenuItem] = useRecoilState(menuItemState);  
 
