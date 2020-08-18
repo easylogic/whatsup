@@ -1,9 +1,9 @@
 import React from 'react';
 import { Layout, Menu, Tag } from 'antd';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import SubMenu from 'antd/lib/menu/SubMenu';
 
-import { responseState, categoryState, apiState, menuState, menuItemState } from '../state/response-state';
+import { responseState, apiState, menuState, menuItemState, categoryViewState } from '../state/response-state';
 import { 
   setSelectedMenuItemForLocalStorage, 
   setApiObjectForLocalStorage, 
@@ -28,9 +28,9 @@ function getTag(text: string) {
 }
 
 function ApiMenu() {
-  const [category] = useRecoilState(categoryState);
-  const [ , setApi] = useRecoilState(apiState);
-  const [ , setResponseObject] = useRecoilState(responseState);
+  const category = useRecoilValue(categoryViewState);
+  const setApi = useSetRecoilState(apiState);
+  const setResponseObject = useSetRecoilState(responseState);
   const [menu, setSelectedMenu] = useRecoilState(menuState);
   const [menuItem, setSelectedMenuItem] = useRecoilState(menuItemState);  
 

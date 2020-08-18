@@ -19,7 +19,7 @@ export default function TagsInput (props: TagsInputProps) {
                 mode="tags" 
                 style={{ width: '100%' }} 
                 placeholder={item.description} 
-                value={inputValues}
+                value={inputValues || []}
                 onChange={(value) => {
                     value = `${value}`.split(',').filter(Boolean)
 

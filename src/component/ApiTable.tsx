@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {Button, Row, Col, Tabs, Badge } from 'antd';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 
-import {responseState, categoryState, apiState} from '../state/response-state'
+import {categoryViewState, apiViewState, responseViewState} from '../state/response-state'
 import { APIParameter } from '../constant/api';
 
 import FileInput from './items/FileInput';
@@ -14,6 +14,7 @@ import NumberInput from './items/NumberInput';
 import ObjectInput from './items/ObjectInput';
 
 import {getDefinitions, getApiJSON, clone} from '../util/get-definitions';
+import TypeHelpViewer from './viewer/TypeHelpViewer';
 
 interface ApiTableProps {
     handleApiParams: (values: any) => void; 
@@ -81,11 +82,11 @@ declare global {
 
 export function ApiTable(props: ApiTableProps) {
     const { handleApiParams } = props;
-    const [category] = useRecoilState(categoryState);
-    const [api] = useRecoilState(apiState);
+    const category = useRecoilValue(categoryViewState);
+    const api = useRecoilValue(apiViewState);
+    const responseObject = useRecoilValue(responseViewState);    
 
     const [isLoading, setLoading] = useState(false);
-    const [responseObject] = useRecoilState(responseState);    
     const [inc, setInc] = useState(0);
 
     const json = getApiJSON(category);       
@@ -170,24 +171,24 @@ export function ApiTable(props: ApiTableProps) {
 
     function createFormItem (it: any, rowIndex: number) {
 
-        let help = undefined;
 
-        if (it.description) {
-            help = <div>type: {it.type}, description: {it.description}</div>;
-        } else {
-            help = <div>
-                <div>type: {it.type}</div>
-                {it.enum ? <div>enum: {JSON.stringify(it.enum)}</div> : ''}
-            </div>;
+        let schema = null; 
+        if (it.type === 'array') {
+            if (it.items.$ref) {
+                schema = getDefinitions(it.items, responseObject.definitions)
+            }
+        } else if (it.$ref) {
+            schema = getDefinitions(it, responseObject.definitions)            
         }
+
 
         const inputValues = clone(getFieldValue(it.name))
 
         return (
             <Row style={{paddingTop: 10}} gutter={10} key={`row-${rowIndex}`}>
                 <Col span={4} style={{wordBreak: 'break-all', fontSize: 13}}>
-                    {it.name} &nbsp;
-                    {it.required ? <div style={{color: 'gray', fontSize: 11}}>required</div> : ''}
+                    <strong>{it.name}</strong> &nbsp;
+                    {it.required ? <div style={{color: 'gray', fontSize: 11, fontStyle: 'italic'}}>(required)</div> : ''}
                 </Col>
                 <Col span={20}>
 
@@ -218,7 +219,7 @@ export function ApiTable(props: ApiTableProps) {
                     <NumberInput item={it} inputValues={inputValues} onChange={handleChangeValue} />
                 )}
 
-                <div style={{color: 'gray'}}>{help}</div>                
+                <TypeHelpViewer item={it} schema={schema} />             
             </Col>  
         </Row>
         )
@@ -238,7 +239,10 @@ export function ApiTable(props: ApiTableProps) {
 
         return (
             <Row style={{paddingTop: 10}} key={`key-${it.name}`}>
-                <Col span={4} style={{wordBreak: 'break-all'}}>{it.name}</Col>
+                <Col span={4} style={{wordBreak: 'break-all'}}>
+                    {it.name}
+                    {it.required ? <div style={{color: 'gray', fontSize: 11, fontStyle: 'italic'}}>(required)</div> : ''}
+                </Col>
                 <Col span={20}>
                     description - {it.description}
                     <ObjectInput inputValues={inputValues} item={it} schema={schema} onChange={handleChangeValue} />

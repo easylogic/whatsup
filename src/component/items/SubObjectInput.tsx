@@ -9,8 +9,8 @@ import TagsInput from './TagsInput';
 import NumberInput from './NumberInput';
 import JSONArrayInput from './JSONArrayInput';
 import JSONObjectInput from './JSONObjectInput';
-import { responseState } from '../../state/response-state';
-import { useRecoilState } from 'recoil';
+import { responseViewState } from '../../state/response-state';
+import { useRecoilValue } from 'recoil';
 import { getDefinitions, clone } from '../../util/get-definitions';
 import TypeHelpViewer from '../viewer/TypeHelpViewer';
 
@@ -23,7 +23,7 @@ interface ObjectInputProps {
 
 export default function SubObjectInput (props: ObjectInputProps) {
     const { item, schema, inputValues, onChange } = props; 
-    const [responseObject] = useRecoilState(responseState)
+    const responseObject = useRecoilValue(responseViewState);    
     const [localInputValues, setLocalInputValues] = useState(inputValues);
 
     // console.log('subobject',localInputValues, inputValues);

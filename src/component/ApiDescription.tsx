@@ -1,11 +1,11 @@
 import React from 'react';
 import { Alert } from 'antd';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 
-import { apiState } from '../state/response-state';
+import { apiViewState } from '../state/response-state';
 
 function ApiDescription() {
-  const [api] = useRecoilState(apiState);
+  const api = useRecoilValue(apiViewState);
 
   return (
     <div>
