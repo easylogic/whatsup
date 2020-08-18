@@ -70,7 +70,7 @@ export const setApiObjectForLocalStorage = (apiObject: APIData) => {
 
 export function getDefinitions(item: any, definitions: any) {
         
-    if (item.$ref) {
+    if (item.$ref && definitions) {
         return definitions[item.$ref.split('definitions/')[1]]
     }
 
@@ -78,5 +78,10 @@ export function getDefinitions(item: any, definitions: any) {
 }
 
 export function clone (value: any) {
-    return JSON.parse(JSON.stringify(value));
+    try {
+        return JSON.parse(JSON.stringify(value));
+    } catch (e) {
+        return "";
+    }
+
 }
