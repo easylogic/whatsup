@@ -11,7 +11,7 @@ import NumberInput from './NumberInput';
 import JSONArrayInput from './JSONArrayInput';
 import { responseViewState } from '../../state/response-state';
 import { useRecoilValue } from 'recoil';
-import { getDefinitions } from '../../util/get-definitions';
+import { getDefinitionsSchema } from '../../util/get-definitions';
 import TypeHelpViewer from '../viewer/TypeHelpViewer';
 import SubObjectInput from './SubObjectInput';
 
@@ -109,10 +109,10 @@ export default function ObjectInput (props: ObjectInputProps) {
         let schema = null; 
         if (it.type === 'array') {
             if (it.items.$ref) {
-                schema = getDefinitions(it.items, responseObject.definitions)
+                schema = getDefinitionsSchema(it.items, responseObject.definitions)
             }
         } else if (it.$ref) {
-            schema = getDefinitions(it, responseObject.definitions)            
+            schema = getDefinitionsSchema(it, responseObject.definitions)            
         }
 
         return (

@@ -13,7 +13,7 @@ import TagsInput from './items/TagsInput';
 import NumberInput from './items/NumberInput';
 import ObjectInput from './items/ObjectInput';
 
-import {getDefinitions, getApiJSON, clone} from '../util/get-definitions';
+import {getDefinitions, getApiJSON, clone, getDefinitionsSchema} from '../util/get-definitions';
 import TypeHelpViewer from './viewer/TypeHelpViewer';
 
 interface ApiTableProps {
@@ -175,10 +175,10 @@ export function ApiTable(props: ApiTableProps) {
         let schema = null; 
         if (it.type === 'array') {
             if (it.items.$ref) {
-                schema = getDefinitions(it.items, responseObject.definitions)
+                schema = getDefinitionsSchema(it.items, responseObject.definitions)
             }
         } else if (it.$ref) {
-            schema = getDefinitions(it, responseObject.definitions)            
+            schema = getDefinitionsSchema(it, responseObject.definitions)            
         }
 
 
@@ -230,7 +230,7 @@ export function ApiTable(props: ApiTableProps) {
         let schema: any = null;
 
         if (it.schema && it.schema?.$ref) {
-            schema = getDefinitions(it.schema, definitions)
+            schema = getDefinitionsSchema(it.schema, definitions)
         } else {
             schema = it.schema;
         }

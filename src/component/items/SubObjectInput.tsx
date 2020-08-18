@@ -11,7 +11,7 @@ import JSONArrayInput from './JSONArrayInput';
 import JSONObjectInput from './JSONObjectInput';
 import { responseViewState } from '../../state/response-state';
 import { useRecoilValue } from 'recoil';
-import { getDefinitions, clone } from '../../util/get-definitions';
+import { clone, getDefinitionsSchema } from '../../util/get-definitions';
 import TypeHelpViewer from '../viewer/TypeHelpViewer';
 
 interface ObjectInputProps {
@@ -43,10 +43,10 @@ export default function SubObjectInput (props: ObjectInputProps) {
         let schema = null; 
         if (it.type === 'array') {
             if (it.items.$ref) {
-                schema = getDefinitions(it.items, responseObject.definitions)
+                schema = getDefinitionsSchema(it.items, responseObject.definitions)
             }
         } else if (it.$ref) {
-            schema = getDefinitions(it, responseObject.definitions)            
+            schema = getDefinitionsSchema(it, responseObject.definitions)            
         }
 
         const localValues = clone(getFieldValue(it.name))

@@ -79,6 +79,15 @@ export const getRealReferenceName = (ref: string) => {
     return { fullName, className}
 }
 
+export function getDefinitionsSchema(item: any, definitions: any) : any {
+    if (item?.$ref) {
+        const refName = getRealReferenceName(item.$ref)
+        return definitions[refName.className]
+    }
+
+    return {}
+}
+
 export function getDefinitions(item: any, definitions: any): any {
 
     if (item?.type === 'array') {
