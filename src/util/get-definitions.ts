@@ -91,38 +91,41 @@ export function getDefinitions(item: any, definitions: any): any {
 
     if (item?.$ref) {
         const refName = getRealReferenceName(item.$ref)
-        const schema = definitions[refName.className]
+        let schema = definitions[refName.className]
+        let properties = schema?.properties || {}
+        let newProperties = {} as {[key: string]: any}
+        Object.keys(properties).forEach(key => {
+            let prop = properties[key];
 
-        Object.keys(schema?.properties || {}).forEach(key => {
-            let prop = schema.properties[key];
+            newProperties[key] = clone(prop)
 
             if (prop.$ref) {
-                schema.properties[key] = getDefinitions(prop, definitions)
+                newProperties[key] = getDefinitions(prop, definitions)
             } else if (prop.items?.$ref) {
-                schema.properties[key].items = getDefinitions(prop.items, definitions)
+                newProperties[key].items = getDefinitions(prop.items, definitions)
             }
 
             if (prop.type) {
 
                 if (prop.type === 'array') { 
-                    schema.properties[key] = [
-                        prop.items
+                    newProperties[key] = [
+                        newProperties[key].items
                     ]
                 } else {
-                    schema.properties[key] = [
+                    newProperties[key] = [
                         prop.type,
                         prop.format ? `(${prop.format})` : ''
-                    ].join('').trim()
+                    ].filter(Boolean).join('')
                 }
 
 
             }
         })
 
-        const key = `${refName.fullName}`;
+        const objectKey = `${refName.fullName}`;
 
         let result = {
-            [key]: schema.properties
+            [objectKey]: newProperties
         }
 
         return result; 

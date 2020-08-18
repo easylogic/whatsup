@@ -24,7 +24,7 @@ export default function ListViewer (props: ListViewerProps) {
                             <List.Item.Meta
                                 avatar={`${item.code}`}
                                 title={`${item.description}`}
-                                description={(Array.isArray(item.schema)) ? <ReactJson src={item.schema} /> : <ReactJson name={name} src={item.schema} />}
+                                description={(Array.isArray(item.schema)) ? <ReactJson src={item.schema} /> : <ReactJson name={name} src={item.schema?.[name] || item.schema} />}
                             />
                         </List.Item>
                     )
