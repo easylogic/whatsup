@@ -1,8 +1,8 @@
 import React from 'react';
 import { Layout, Tag, Alert, PageHeader } from 'antd';
 import ReactMarkdown from "react-markdown";
-import { useRecoilState } from 'recoil';
-import { categoryState, apiState, } from '../state/response-state';
+import { useRecoilValue } from 'recoil';
+import { apiViewState, categoryViewState, } from '../state/response-state';
 import { 
   getApiJSON
 } from '../util/get-definitions';
@@ -24,8 +24,8 @@ function getTag(text: string) {
 }
 
 function ApiPageTop() {
-  const [category] = useRecoilState(categoryState);
-  const [api] = useRecoilState(apiState);
+  const category = useRecoilValue(categoryViewState);
+  const api = useRecoilValue(apiViewState);
 
   const json = getApiJSON(category);
 

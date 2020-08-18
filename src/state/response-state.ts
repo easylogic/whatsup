@@ -1,4 +1,4 @@
-import { atom } from 'recoil';
+import { atom, selector } from 'recoil';
 import { getApiJSON, getApiObject, getCategoryName, getSelectedOpenMenu, getSelectedMenuItem } from '../util/get-definitions';
 
 const json = getApiJSON()
@@ -13,11 +13,25 @@ export const responseState = atom({
     }
 })
 
+export const responseViewState = selector({
+  key: 'responseViewState',
+  get: ({get}) => {
+    return get(responseState);
+  }
+})
+
 
 export const categoryState = atom({
-  key: 'category', 
+  key: 'categoryState', 
   default: getCategoryName(), 
 });
+
+export const categoryViewState = selector({
+  key: 'categoryViewState',
+  get: ({get}) => {
+    return get(categoryState)
+  }
+})
 
 export const menuState = atom({
   key: 'menu', 
@@ -30,6 +44,13 @@ export const menuItemState = atom({
 });
 
 export const apiState = atom({
-  key: 'api', 
+  key: 'apiState', 
   default: getApiObject(), 
+});
+
+export const apiViewState = selector({
+  key: 'apiViewState', 
+  get: ({get}) => {
+    return get(apiState);
+  }
 });

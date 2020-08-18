@@ -1,12 +1,12 @@
 import React from 'react';
 import { Layout, Modal, message } from 'antd';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import './App.css';
 import {ApiTable} from './component/ApiTable';
 import {ResponseTable} from './component/ResponseTable';
 import {customizedAxios} from './util/customized-axios';
-import { responseState, categoryState, apiState } from './state/response-state';
+import { responseState, categoryViewState, apiViewState } from './state/response-state';
 import { 
   getApiJSON
 } from './util/get-definitions';
@@ -18,8 +18,8 @@ import ApiDescription from './component/ApiDescription';
 const { Content } = Layout 
 
 function App() {
-  const [category] = useRecoilState(categoryState);
-  const [api] = useRecoilState(apiState);
+  const category = useRecoilValue(categoryViewState);
+  const api = useRecoilValue(apiViewState);
   const [responseObject, setResponseObject] = useRecoilState(responseState);
 
   const json = getApiJSON(category);

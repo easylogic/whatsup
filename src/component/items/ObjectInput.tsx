@@ -9,8 +9,8 @@ import SelectInput from './SelectInput';
 import TagsInput from './TagsInput';
 import NumberInput from './NumberInput';
 import JSONArrayInput from './JSONArrayInput';
-import { responseState } from '../../state/response-state';
-import { useRecoilState } from 'recoil';
+import { responseViewState } from '../../state/response-state';
+import { useRecoilValue } from 'recoil';
 import { getDefinitions } from '../../util/get-definitions';
 import TypeHelpViewer from '../viewer/TypeHelpViewer';
 import SubObjectInput from './SubObjectInput';
@@ -89,7 +89,7 @@ function schemaToJSON(schema: any, definitions: any) {
 
 export default function ObjectInput (props: ObjectInputProps) {
     const { item, schema, inputValues = {}, onChange } = props; 
-    const [responseObject] = useRecoilState(responseState)
+    const responseObject = useRecoilValue(responseViewState);    
     const [localInputValues, setLocalInputValues] = useState(inputValues);
 
     function onChangeField(field: string, value: any) {

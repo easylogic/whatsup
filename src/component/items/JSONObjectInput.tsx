@@ -1,8 +1,8 @@
 
 import React from 'react';
 import {Input } from 'antd';
-import { responseState } from '../../state/response-state';
-import { useRecoilState } from 'recoil';
+import { responseViewState } from '../../state/response-state';
+import { useRecoilValue } from 'recoil';
 
 interface JSONInputProps {
     item: any;
@@ -68,7 +68,7 @@ function schemaToJSON(schema: any, definitions: any) {
 
 export default function JSONObjectInput (props: JSONInputProps) {
     const { item, inputValues, schema, onChange } = props; 
-    const [responseObject] = useRecoilState(responseState);        
+    const responseObject = useRecoilValue(responseViewState);    
 
     return <Input.TextArea rows={5} defaultValue={JSON.stringify(inputValues, null, 4) || schemaToJSON(schema, responseObject.definitions)} onChange ={(e) => {
 

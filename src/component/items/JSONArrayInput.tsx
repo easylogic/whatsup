@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import {Row, Col, Button } from 'antd';
 
 import SubObjectInput from './SubObjectInput';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { getDefinitions, clone } from '../../util/get-definitions';
-import { responseState } from '../../state/response-state';
+import { responseViewState } from '../../state/response-state';
 import NumberInput from './NumberInput';
 import BooleanInput from './BooleanInput';
 import SelectInput from './SelectInput';
@@ -27,7 +27,7 @@ interface Data {
 
 export default function JSONArrayInput (props: JSONInputProps) {
     const { item, schema, inputValues = [], onChange } = props; 
-    const [responseObject] = useRecoilState(responseState)    
+    const responseObject = useRecoilValue(responseViewState);    
     const [localInputValues, setLocalInputValues] = useState(inputValues);
 
     // console.log('array',localInputValues, inputValues);

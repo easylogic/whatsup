@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {Button, Row, Col, Tabs, Badge } from 'antd';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 
-import {responseState, categoryState, apiState} from '../state/response-state'
+import {categoryViewState, apiViewState, responseViewState} from '../state/response-state'
 import { APIParameter } from '../constant/api';
 
 import FileInput from './items/FileInput';
@@ -81,11 +81,11 @@ declare global {
 
 export function ApiTable(props: ApiTableProps) {
     const { handleApiParams } = props;
-    const [category] = useRecoilState(categoryState);
-    const [api] = useRecoilState(apiState);
+    const category = useRecoilValue(categoryViewState);
+    const api = useRecoilValue(apiViewState);
+    const responseObject = useRecoilValue(responseViewState);    
 
     const [isLoading, setLoading] = useState(false);
-    const [responseObject] = useRecoilState(responseState);    
     const [inc, setInc] = useState(0);
 
     const json = getApiJSON(category);       
@@ -187,7 +187,7 @@ export function ApiTable(props: ApiTableProps) {
             <Row style={{paddingTop: 10}} gutter={10} key={`row-${rowIndex}`}>
                 <Col span={4} style={{wordBreak: 'break-all', fontSize: 13}}>
                     {it.name} &nbsp;
-                    {it.required ? <div style={{color: 'gray', fontSize: 11}}>required</div> : ''}
+                    {it.required ? <div style={{color: 'gray', fontSize: 11, fontStyle: 'italic'}}>(required)</div> : ''}
                 </Col>
                 <Col span={20}>
 
