@@ -3,6 +3,7 @@ import JSONViewer from './viewer/JSONViewer';
 import ListViewer from './viewer/ListViewer';
 import { Tabs, Alert } from 'antd';
 import { getDefinitions } from '../util/get-definitions';
+import { Schema } from '../constant/api';
 
 interface ResponseTableProps {
   responseObject: any;
@@ -13,7 +14,9 @@ export function ResponseTable(props: ResponseTableProps) {
 
   const dataSource = Object.keys(api?.object?.responses || {}).map((code) => {
     const res = api?.object?.responses[code];
-    let schema = getDefinitions(res.schema, definitions);
+
+    const contentType = Object.values(res.content)[0] as { schema: Schema };
+    let schema = getDefinitions(contentType.schema, definitions);
 
     return {
       ...res,      

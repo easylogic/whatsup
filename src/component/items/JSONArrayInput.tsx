@@ -13,6 +13,7 @@ import TagsInput from './TagsInput';
 import TextInput from './TextInput';
 import JSONObjectInput from './JSONObjectInput';
 import TypeHelpViewer from '../viewer/TypeHelpViewer';
+import { APIParameter } from '../../constant/api';
 
 interface JSONInputProps {
     item: any;
@@ -83,55 +84,55 @@ export default function JSONArrayInput (props: JSONInputProps) {
         return inputValues[index] && inputValues[index][name]
     }
 
-    function makeNoSchemaInput (index: number, key: string, it: any, schema: any) {
+    function makeNoSchemaInput (index: number, key: string, it: APIParameter, schema: any) {
 
         it = {...it, name: key}
         const arrayInputValues = clone(getFieldValue(index, key))
 
-        if(['number', 'integer', 'float', 'double', 'int32', 'int64'].includes(it.type)) {
+        if(['number', 'integer', 'float', 'double', 'int32', 'int64'].includes(it.schema.type)) {
             return <NumberInput item={it} inputValues={arrayInputValues} onChange={(_: any, value) => {
                 onChangeField(index, key, value)
             }} />
         }
 
-        if (it.type === 'boolean') {
+        if (it.schema.type === 'boolean') {
             return <BooleanInput item={it} inputValues={Boolean(arrayInputValues)} onChange={(_: any, value) => {
                 onChangeField(index, key, value)
             }} />
         }
 
-        if(it.type === 'string' && Boolean(it.enum) === false) {
+        if(it.schema.type === 'string' && Boolean(it.enum) === false) {
             return <TextInput item={it} inputValues={arrayInputValues} onChange={(_: any, value) => {
                 onChangeField(index, key, value)
             }} />
         }
 
-        if (it.type === 'string' && it.enum) {
+        if (it.schema.type === 'string' && it.enum) {
             return <SelectInput item={it} inputValues={arrayInputValues} onChange={(_: any, value) => {
                 onChangeField(index, key, value)
             }} />            
         }
     
 
-        if(it.type === 'array' && it.enum) {
+        if(it.schema.type === 'array' && it.enum) {
             return <SelectInput item={it} inputValues={arrayInputValues} onChange={(_: any, value) => {
                 onChangeField(index, key, value)
             }} />
         }
 
-        if(it.type === 'array' && it.collectionFormat) {
+        if(it.schema.type === 'array' && it.collectionFormat) {
             return <TagsInput item={it} inputValues={arrayInputValues} onChange={(_: any, value) => {
                 onChangeField(index, key, value)
             }} />
         }
 
-        if (it.type === 'array' && it.items && it.items.type)  {
+        if (it.schema.type === 'array' && it.items && it.items.type)  {
             return <TagsInput item={it} inputValues={arrayInputValues} onChange={(_: any, value) => {
                 onChangeField(index, key, value)
             }} />
         }
 
-        if (!it.type) {
+        if (!it.schema.type) {
             return <TextInput item={{...it, ...schema}} inputValues={arrayInputValues}  onChange={(_: any, value) => {
                 onChangeField(index, key, value)
             }} />
@@ -140,7 +141,7 @@ export default function JSONArrayInput (props: JSONInputProps) {
         return undefined;
     }
 
-    function makeSchemaInput (index: number, key: string, it: any, schema: any) {
+    function makeSchemaInput (index: number, key: string, it: APIParameter, schema: any) {
 
         // console.log(it, schema);
 
@@ -153,7 +154,7 @@ export default function JSONArrayInput (props: JSONInputProps) {
         it = {...it, name: key}
         const arrayInputValues = clone(getFieldValue(index, key))
 
-        if(schema && it.type === 'array') {
+        if(schema && it.schema.type === 'array') {
             return <JSONArrayInput item={{...schema, name: key}}  inputValues={arrayInputValues}  schema={schema} onChange={(_, value) => {
                 onChangeField(index, key, value)
             }} />
@@ -195,14 +196,12 @@ export default function JSONArrayInput (props: JSONInputProps) {
                 return <div key={`index-${index}`}>
                     <hr style={{border: 'none', borderTop: '1px solid #ececec'}} />                       
                     {inputList.map(inputItem => {
-                        const it = inputItem.value; 
+                        const it = inputItem.value as APIParameter; 
                         let schema = null; 
-                        if (it.type === 'array') {
+                        if (it.schema.type === 'array') {
                             if (it.items.$ref) {
                                 schema = getDefinitions(it.items, responseObject.definitions)
                             }
-                        } else if (it.type?.$ref) {
-                            schema = getDefinitions(it.type, responseObject.definitions)
                         } else if (it.$ref) {
                             schema = getDefinitions(it, responseObject.definitions)            
                         }

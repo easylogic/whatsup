@@ -29,6 +29,8 @@ function ApiPageTop() {
 
   const json = getApiJSON(category);
 
+  console.log(json, api);
+
   return (
     <>
         <Alert message={<ReactMarkdown source={json.description}/>} type="info" />
@@ -37,22 +39,37 @@ function ApiPageTop() {
             className="site-page-header"
             style={{ marginBottom: 10, backgroundColor: 'white'}}
             title={(
-            <div>{getTag(api.method)} {json.basePath}{api.path}</div>  
+              <div>
+                <div>
+                  <Tag color="purple">Controller</Tag> {api.object?.tags.map(tag => {
+                    const tagInfo = json.tags.find(it => it.name === tag);
+                    return <Tag key={tag} color="purple">{tag} - {tagInfo.description}</Tag>
+                  })}
+                </div>
+                <div>{getTag(api.method)} {json.basePath}{api.path}</div>  
+              </div>
             )}
             breadcrumb={{ routes: [
-            {
-                path: 'index',
-                breadcrumbName: `${json.title}`,
-            },
-            {
-                path: 'host',
-                breadcrumbName: `https://${json.host}`,
-            },
+              {
+                  path: 'index',
+                  breadcrumbName: `${json.title}`,
+              },
+              {
+                  path: 'host',
+                  breadcrumbName: `https://${json.host}`,
+              },
             ]}}
         >
             <Content>
 
-            <div><Tag color="purple">Summary</Tag> {api.object?.summary}</div>
+            <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 10
+            }}>
+              <div><Tag color="purple">Summary</Tag> {api.object?.summary}</div>
+            </div>
+
             </Content>  
         </PageHeader>
     </>

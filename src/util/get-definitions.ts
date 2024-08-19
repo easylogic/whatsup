@@ -68,6 +68,9 @@ export const setApiObjectForLocalStorage = (apiObject: APIData) => {
 }
 
 export const getRealReferenceName = (ref: string) => {
+
+    if (ref.includes('definitions')) {
+
     const fullName = ref
             .split('definitions/')[1]
 
@@ -77,19 +80,33 @@ export const getRealReferenceName = (ref: string) => {
             .pop() || ""
 
     return { fullName, className}
+
+    } 
+
+    if (ref.includes('components')) {
+        const fullName = ref.split('#')[1];
+
+        const className = fullName.split('/').pop() || ""
+
+        return { fullName, className}
+    }
+
+    return {
+        fullName: '',
+        className: ''
+    }
 }
 
 export function getDefinitionsSchema(item: any, definitions: any) : any {
     if (item?.$ref) {
         const refName = getRealReferenceName(item.$ref)
-        return definitions[refName.className]
+        return definitions[refName!.className]
     }
 
     return {}
 }
 
 export function getDefinitions(item: any, definitions: any): any {
-
     if (item?.type === 'array') {
         if (item.items?.$ref) {
             return [
@@ -100,7 +117,7 @@ export function getDefinitions(item: any, definitions: any): any {
 
     if (item?.$ref) {
         const refName = getRealReferenceName(item.$ref)
-        let schema = definitions[refName.className]
+        let schema = definitions?.[refName.className] || {}
         let properties = schema?.properties || {}
         let newProperties = {} as {[key: string]: any}
         Object.keys(properties).forEach(key => {

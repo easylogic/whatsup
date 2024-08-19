@@ -91,7 +91,7 @@ export function ApiTable(props: ApiTableProps) {
 
     const json = getApiJSON(category);       
     const parameters = api?.object?.parameters;
-    const definitions = json.definitions
+    const definitions = json.definitions || {}
 
     const urlKey = `https://${json.host}${json.basePath}${api.path}-${api.method}`
     const SAVE_GLOBAL_INPUT_VALUES_KEY =  `save-${urlKey}`
@@ -169,11 +169,11 @@ export function ApiTable(props: ApiTableProps) {
         setGlobalInputValues(name, value);
     }
 
-    function createFormItem (it: any, rowIndex: number) {
+    function createFormItem (it: APIParameter, rowIndex: number) {
 
 
         let schema = null; 
-        if (it.type === 'array') {
+        if (it.schema.type === 'array') {
             if (it.items.$ref) {
                 schema = getDefinitionsSchema(it.items, responseObject.definitions)
             }
@@ -192,30 +192,30 @@ export function ApiTable(props: ApiTableProps) {
                 </Col>
                 <Col span={20}>
 
-                {it.type === 'file' && (
+                {it.schema.type === 'file' && (
                     <FileInput item={it} inputValues={inputValues} onChange={handleChangeValue} />
                 )}
-                {it.type === 'boolean' && (
+                {it.schema.type === 'boolean' && (
                     <BooleanInput item={it} inputValues={Boolean(inputValues)} onChange={handleChangeValue} />
                 )}
 
-                {(it.type === 'string' && Boolean(it.enum) === false) && (  // enum 이 없으면 일반 텍스트 
+                {(it.schema.type === 'string' && Boolean(it.enum) === false) && (  // enum 이 없으면 일반 텍스트 
                     <TextInput item={it} inputValues={inputValues} onChange={handleChangeValue} />
                 )}
 
-                {(it.type === 'string' && it.enum) && (     // enum 이 있으면 고정된 텍스트 , select 로 표현 
+                {(it.schema.type === 'string' && it.enum) && (     // enum 이 있으면 고정된 텍스트 , select 로 표현 
                     <SelectInput item={it}  inputValues={inputValues} onChange={handleChangeValue} />
                 )}
 
-                {(it.type === 'array' && it.enum) && (     // enum 이 있으면 고정된 텍스트 , select 로 표현 
+                {(it.schema.type === 'array' && it.enum) && (     // enum 이 있으면 고정된 텍스트 , select 로 표현 
                     <SelectInput item={it} inputValues={inputValues} onChange={handleChangeValue} />
                 )}              
 
-                {(it.type === 'array' && it.collectionFormat) && (     
+                {(it.schema.type === 'array' && it.collectionFormat) && (     
                     <TagsInput item={it} inputValues={inputValues} onChange={handleChangeValue} />
                 )}                  
 
-                {['number', 'integer', 'float', 'double', 'int32', 'int64'].includes(it.type) && (
+                {['number', 'integer', 'float', 'double', 'int32', 'int64'].includes(it.schema.type) && (
                     <NumberInput item={it} inputValues={inputValues} onChange={handleChangeValue} />
                 )}
 

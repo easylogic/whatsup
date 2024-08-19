@@ -1,0 +1,3267 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Cell Platform",
+        "description": "Common-Platform",
+        "contact": {
+            "name": "Kyoungil Lee",
+            "email": "kyoungil.lee@navercorp.com"
+        },
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "https://dev-platform-api.cell.naver.com"
+        }
+    ],
+    "security": [
+        {
+            "basicAuth": []
+        }
+    ],
+    "tags": [
+        {
+            "name": "NotificationSlackController",
+            "description": "Notification Slack API"
+        },
+        {
+            "name": "TestController",
+            "description": "callback 등을 테스트하기 위한 API"
+        },
+        {
+            "name": "SimpleOpenPostController",
+            "description": "Simple Open Post API"
+        },
+        {
+            "name": "General MongoDB",
+            "description": "Mongo CRUD API"
+        },
+        {
+            "name": "CellBaseController",
+            "description": "Cell Base API"
+        },
+        {
+            "name": "SimpleClosePostController",
+            "description": "Simple Post API"
+        },
+        {
+            "name": "SimpleCommentController",
+            "description": "Simple Comment API"
+        },
+        {
+            "name": "CellCloudConfigTestController",
+            "description": "Cell Cloud Config Test API"
+        }
+    ],
+    "paths": {
+        "/common-api/v1/storage-mongo/data/{model}/{id}": {
+            "get": {
+                "tags": [
+                    "General MongoDB"
+                ],
+                "summary": "Mongo Data 조회",
+                "description": "몽고디비에 데이터를 조회한다.",
+                "operationId": "getMongoData",
+                "parameters": [
+                    {
+                        "name": "model",
+                        "in": "path",
+                        "description": "data Model 구분자 (서비스명 등 유저가 자유롭게 설정)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "PK ID (고유값, 아이디)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CELL-API-TEST-ALLOW-PASSPORT",
+                        "in": "header",
+                        "description": "테스트 로그인 정보",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StorageGeneralDataViewMapStringObject"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StorageGeneralDataViewMapStringObject"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StorageGeneralDataViewMapStringObject"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "General MongoDB"
+                ],
+                "summary": "Mongo Data 저장",
+                "description": "몽고디비에 데이터를 저장한다.",
+                "operationId": "storeDataToMongo",
+                "parameters": [
+                    {
+                        "name": "model",
+                        "in": "path",
+                        "description": "data Model 구분자 (서비스명 등 유저가 자유롭게 설정)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "PK ID (고유값, 아이디)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CELL-API-TEST-ALLOW-PASSPORT",
+                        "in": "header",
+                        "description": "테스트 로그인 정보",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StorageCRUDCreateCommand"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StorageDataViewMapStringObject"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StorageDataViewMapStringObject"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StorageDataViewMapStringObject"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "General MongoDB"
+                ],
+                "summary": "Mongo Data 삭제",
+                "description": "몽고디비에 데이터를 삭제한다.",
+                "operationId": "deleteMongoData",
+                "parameters": [
+                    {
+                        "name": "model",
+                        "in": "path",
+                        "description": "data Model 구분자 (서비스명 등 유저가 자유롭게 설정)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "PK ID (고유값, 아이디)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CELL-API-TEST-ALLOW-PASSPORT",
+                        "in": "header",
+                        "description": "테스트 로그인 정보",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StorageDataDeletedView"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StorageDataDeletedView"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StorageDataDeletedView"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "General MongoDB"
+                ],
+                "summary": "Mongo Data 수정",
+                "description": "몽고디비에 데이터를 수정한다.",
+                "operationId": "updateMongoData",
+                "parameters": [
+                    {
+                        "name": "model",
+                        "in": "path",
+                        "description": "data Model 구분자 (서비스명 등 유저가 자유롭게 설정)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "PK ID (고유값, 아이디)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CELL-API-TEST-ALLOW-PASSPORT",
+                        "in": "header",
+                        "description": "테스트 로그인 정보",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StorageCRUDCreateCommand"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StorageGeneralDataViewMapStringObject"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StorageGeneralDataViewMapStringObject"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StorageGeneralDataViewMapStringObject"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/common-api/v1/storage-mongo/data/{model}/page": {
+            "post": {
+                "tags": [
+                    "General MongoDB"
+                ],
+                "summary": "Mongo Data 리스트,검색결과 리스트 조회",
+                "description": "몽고디비에 데이터 리스트,검색결과 리스트 조회",
+                "operationId": "getMongoDataSearch",
+                "parameters": [
+                    {
+                        "name": "model",
+                        "in": "path",
+                        "description": "data Model 구분자 (서비스명 등 유저가 자유롭게 설정)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        }
+                    },
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CELL-API-TEST-ALLOW-PASSPORT",
+                        "in": "header",
+                        "description": "테스트 로그인 정보",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StorageCRUDSearchCommand"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StorageDataListViewListMapStringObject"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StorageDataListViewListMapStringObject"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StorageDataListViewListMapStringObject"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/common-api/v1/open-post": {
+            "post": {
+                "tags": [
+                    "SimpleOpenPostController"
+                ],
+                "summary": "포스트 등록",
+                "operationId": "create",
+                "parameters": [
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CELL-API-TEST-ALLOW-PASSPORT",
+                        "in": "header",
+                        "description": "테스트 로그인 정보",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SimpleOpenPostCreateCommand"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostView"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostView"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostView"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/common-api/v1/open-post/page": {
+            "post": {
+                "tags": [
+                    "SimpleOpenPostController"
+                ],
+                "summary": "포스트 목록 조회",
+                "operationId": "getPostList",
+                "parameters": [
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CELL-API-TEST-ALLOW-PASSPORT",
+                        "in": "header",
+                        "description": "테스트 로그인 정보",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SimplePostListCommand"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostListView"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostListView"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostListView"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/common-api/v1/notification/slack/message": {
+            "post": {
+                "tags": [
+                    "NotificationSlackController"
+                ],
+                "summary": "Slack Message",
+                "description": "Slack Message 보내기",
+                "operationId": "slackSendMessage",
+                "parameters": [
+                    {
+                        "name": "SLACK-TOKEN",
+                        "in": "header",
+                        "description": "Slack Access Token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CELL-API-TEST-ALLOW-PASSPORT",
+                        "in": "header",
+                        "description": "테스트 로그인 정보",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SlackSendMessageCommand"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TransporterData"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TransporterData"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TransporterData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/common-api/v1/comment": {
+            "post": {
+                "tags": [
+                    "SimpleCommentController"
+                ],
+                "summary": "Comment 등록",
+                "operationId": "create_1",
+                "parameters": [
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CELL-API-TEST-ALLOW-PASSPORT",
+                        "in": "header",
+                        "description": "테스트 로그인 정보",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SimpleCommentCreateCommand"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleCommentView"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleCommentView"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleCommentView"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/common-api/v1/comment/page/{id}": {
+            "post": {
+                "tags": [
+                    "SimpleCommentController"
+                ],
+                "summary": "Comment 부모리스트",
+                "operationId": "getParentList",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CELL-API-TEST-ALLOW-PASSPORT",
+                        "in": "header",
+                        "description": "테스트 로그인 정보",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SimpleCommentListCommand"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleCommentListView"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleCommentListView"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleCommentListView"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/common-api/v1/comment/page/child/{id}": {
+            "post": {
+                "tags": [
+                    "SimpleCommentController"
+                ],
+                "summary": "Comment 자식리스트",
+                "operationId": "getChildList",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CELL-API-TEST-ALLOW-PASSPORT",
+                        "in": "header",
+                        "description": "테스트 로그인 정보",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SimpleCommentListCommand"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleCommentListView"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleCommentListView"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleCommentListView"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/common-api/v1/close-post": {
+            "post": {
+                "tags": [
+                    "SimpleClosePostController"
+                ],
+                "summary": "포스트 등록",
+                "operationId": "create_2",
+                "parameters": [
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CELL-API-TEST-ALLOW-PASSPORT",
+                        "in": "header",
+                        "description": "테스트 로그인 정보",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SimplePostCreateCommand"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostView"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostView"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostView"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/common-api/v1/close-post/page": {
+            "post": {
+                "tags": [
+                    "SimpleClosePostController"
+                ],
+                "summary": "포스트 목록 조회",
+                "operationId": "getPostList_1",
+                "parameters": [
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CELL-API-TEST-ALLOW-PASSPORT",
+                        "in": "header",
+                        "description": "테스트 로그인 정보",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SimplePostListCommand"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostListView"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostListView"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostListView"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/common-api/v1/open-post/{id}": {
+            "get": {
+                "tags": [
+                    "SimpleOpenPostController"
+                ],
+                "summary": "포스트 단건 조회",
+                "operationId": "getPostDetail",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CELL-API-TEST-ALLOW-PASSPORT",
+                        "in": "header",
+                        "description": "테스트 로그인 정보",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostView"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostView"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostView"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "SimpleOpenPostController"
+                ],
+                "summary": "포스트 삭제",
+                "operationId": "delete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CELL-API-TEST-ALLOW-PASSPORT",
+                        "in": "header",
+                        "description": "테스트 로그인 정보",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SimpleOpenPostDeleteCommand"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostView"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostView"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostView"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "SimpleOpenPostController"
+                ],
+                "summary": "포스트 수정",
+                "operationId": "update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CELL-API-TEST-ALLOW-PASSPORT",
+                        "in": "header",
+                        "description": "테스트 로그인 정보",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SimpleOpenPostUpdateCommand"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostView"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostView"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostView"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/common-api/v1/comment/{id}": {
+            "delete": {
+                "tags": [
+                    "SimpleCommentController"
+                ],
+                "summary": "Comment 삭제",
+                "operationId": "delete_1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CELL-API-TEST-ALLOW-PASSPORT",
+                        "in": "header",
+                        "description": "테스트 로그인 정보",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleCommentView"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleCommentView"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleCommentView"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "SimpleCommentController"
+                ],
+                "summary": "Comment 수정",
+                "operationId": "update_1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CELL-API-TEST-ALLOW-PASSPORT",
+                        "in": "header",
+                        "description": "테스트 로그인 정보",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SimpleCommentUpdateCommand"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleCommentView"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleCommentView"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleCommentView"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/common-api/v1/close-post/{id}": {
+            "get": {
+                "tags": [
+                    "SimpleClosePostController"
+                ],
+                "summary": "포스트 단건 조회",
+                "operationId": "getPostDetail_1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CELL-API-TEST-ALLOW-PASSPORT",
+                        "in": "header",
+                        "description": "테스트 로그인 정보",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostView"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostView"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostView"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "SimpleClosePostController"
+                ],
+                "summary": "포스트 삭제",
+                "operationId": "delete_2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CELL-API-TEST-ALLOW-PASSPORT",
+                        "in": "header",
+                        "description": "테스트 로그인 정보",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostView"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostView"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostView"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "SimpleClosePostController"
+                ],
+                "summary": "포스트 수정",
+                "operationId": "create_3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CELL-API-TEST-ALLOW-PASSPORT",
+                        "in": "header",
+                        "description": "테스트 로그인 정보",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SimplePostUpdateCommand"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostView"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostView"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimplePostView"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/common-api/v1/test/callback": {
+            "get": {
+                "tags": [
+                    "TestController"
+                ],
+                "summary": "oauth 콜백테스트",
+                "description": "oauth 에서 로그인한 정보로 cell gateway를 통과해서 cell user를 만들고 이 정보로 API 사용테스트",
+                "operationId": "testCallback",
+                "parameters": [
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Result"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Result"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Result"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/common-api/v1/cell/base/api-list": {
+            "get": {
+                "tags": [
+                    "CellBaseController"
+                ],
+                "operationId": "getApiList",
+                "parameters": [
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CELL-API-TEST-ALLOW-PASSPORT",
+                        "in": "header",
+                        "description": "테스트 로그인 정보",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "enum": [
+                                            "ALL",
+                                            "LOGIN_CHECK",
+                                            "CERTIFICATION",
+                                            "OLD_CERTIFICATION",
+                                            "CELL_BASE_API_LIST",
+                                            "ENVIRONMENT_AUTHENTICATION",
+                                            "DATA_LOG_COLLECTOR",
+                                            "SLACK",
+                                            "SIMPLE_COMMENT",
+                                            "SIMPLE_OPEN_POST",
+                                            "SIMPLE_CLOSE_POST",
+                                            "CREATE",
+                                            "CREATE_OPEN",
+                                            "CELL_CACHE",
+                                            "AUTH_CELL_CACHE",
+                                            "REDIS_CACHE",
+                                            "STORAGE",
+                                            "NAVER_CDN",
+                                            "NAVER_PRIVATE_CDN",
+                                            "NUBES",
+                                            "NUBES_MYSQL_HEALTH",
+                                            "HOME_UPLOAD",
+                                            "AWS_S3",
+                                            "AUDIOINFRA",
+                                            "PRIVATE_AUDIOINFRA",
+                                            "PHOTOINFRA",
+                                            "PRIVATE_PHOTOINFRA",
+                                            "VIDEOINFRA",
+                                            "PRIVATE_VIDEOINFRA",
+                                            "NCLAVIS",
+                                            "NAVER_MAPS",
+                                            "PRIVATE_NAVER_MAPS",
+                                            "NAVER_SHOPPING",
+                                            "PRIVATE_NAVER_SHOPPING",
+                                            "NAVER_BOOKS",
+                                            "PRIVATE_NAVER_BOOKS",
+                                            "NAVER_BROADCASTS",
+                                            "PRIVATE_NAVER_BROADCASTS",
+                                            "NAVER_CALCULATOR",
+                                            "PRIVATE_NAVER_CALCULATOR",
+                                            "NAVER_EXHIBITIONS",
+                                            "PRIVATE_NAVER_EXHIBITIONS",
+                                            "NAVER_MOVIES",
+                                            "PRIVATE_NAVER_MOVIES",
+                                            "NAVER_MUSICS",
+                                            "PRIVATE_NAVER_MUSICS",
+                                            "NAVER_NEWS",
+                                            "PRIVATE_NAVER_NEWS",
+                                            "NAVER_BLOG",
+                                            "PRIVATE_NAVER_BLOG",
+                                            "NAVER_OGLINK",
+                                            "PRIVATE_NAVER_OGLINK",
+                                            "NAVER_PLACE",
+                                            "PRIVATE_NAVER_PLACE",
+                                            "NAVER_PERFORMANCES",
+                                            "PRIVATE_NAVER_PERFORMANCES",
+                                            "NAVER_TOPICNET",
+                                            "PRIVATE_NAVER_TOPICNET",
+                                            "NAVER_TRAVELS",
+                                            "NAVER_OVERSEA_TRAVELS",
+                                            "PRIVATE_NAVER_OVERSEA_TRAVELS",
+                                            "PRIVATE_NAVER_TRAVELS",
+                                            "NAVER_TRANSLATE",
+                                            "PRIVATE_NAVER_TRANSLATE",
+                                            "NAVER_SOCIALGW",
+                                            "PRIVATE_NAVER_SOCIALGW",
+                                            "NAVER_SPELLER",
+                                            "PRIVATE_NAVER_SPELLER",
+                                            "NAVER_STOREP",
+                                            "PRIVATE_NAVER_STOREP",
+                                            "NAVER_STICKERS",
+                                            "PRIVATE_NAVER_STICKERS",
+                                            "NAVER_BIFROST",
+                                            "PRIVATE_NAVER_BIFROST",
+                                            "NAVER_PAY",
+                                            "NAVER_OPEN_TALK",
+                                            "NAVER_NELO2",
+                                            "NAVER_LOGOUT",
+                                            "GOOGLE_MAPS",
+                                            "PRIVATE_GOOGLE_MAPS",
+                                            "AUTHORITY",
+                                            "MAPPING_SITE",
+                                            "SITE_DATA",
+                                            "SITE_TEMPLATE_DATA",
+                                            "SSR_HTML_DATA",
+                                            "VIEW_CACHE",
+                                            "QUERY_DATA",
+                                            "STYLE_RESOURCE",
+                                            "STYLE_MAPPER",
+                                            "MUSIC_BANNER_MAPPER",
+                                            "MUSIC_BANNER_RESOURCE",
+                                            "SENSE_TIME_LICENSE",
+                                            "SERVICE_CONFIG",
+                                            "META_INFO",
+                                            "TREVI_COMPONENT_GIPHY_STICKER",
+                                            "TREVI_COMPONENT_GOOGLE_MAP",
+                                            "TREVI_COMPONENT_NAVER_BLOG",
+                                            "TREVI_COMPONENT_NAVER_BOOK",
+                                            "TREVI_COMPONENT_NAVER_MAPS",
+                                            "TREVI_COMPONENT_NAVER_MOVIES",
+                                            "TREVI_COMPONENT_NAVER_NEWS",
+                                            "TREVI_COMPONENT_NAVER_OGLINK",
+                                            "TREVI_COMPONENT_NAVER_OPEN_TALK",
+                                            "TREVI_COMPONENT_NAVER_PAY",
+                                            "TREVI_COMPONENT_NAVER_PLACE",
+                                            "TREVI_COMPONENT_NAVER_PLAY",
+                                            "TREVI_COMPONENT_NAVER_SHOPPING",
+                                            "TREVI_COMPONENT_STYLE",
+                                            "TREVI_COMPONENT_TRACK",
+                                            "TREVI_PROXY_NAVER_PHOTO_INFRA",
+                                            "TREVI_PROXY_NAVER_VIDEO_INFRA",
+                                            "TREVI_PROXY_META_PUBLISH",
+                                            "TREVI_PROXY_SAMPLE_APP",
+                                            "TREVI_PROXY_SENSE_TIME",
+                                            "TREVI_EXTERNAL_VALIDATE",
+                                            "TREVI_EXTERNAL_MIGRATE",
+                                            "TREVI_ADMIN_SENSE_TIME",
+                                            "COMMON_STORAGE_MONGO"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "enum": [
+                                            "ALL",
+                                            "LOGIN_CHECK",
+                                            "CERTIFICATION",
+                                            "OLD_CERTIFICATION",
+                                            "CELL_BASE_API_LIST",
+                                            "ENVIRONMENT_AUTHENTICATION",
+                                            "DATA_LOG_COLLECTOR",
+                                            "SLACK",
+                                            "SIMPLE_COMMENT",
+                                            "SIMPLE_OPEN_POST",
+                                            "SIMPLE_CLOSE_POST",
+                                            "CREATE",
+                                            "CREATE_OPEN",
+                                            "CELL_CACHE",
+                                            "AUTH_CELL_CACHE",
+                                            "REDIS_CACHE",
+                                            "STORAGE",
+                                            "NAVER_CDN",
+                                            "NAVER_PRIVATE_CDN",
+                                            "NUBES",
+                                            "NUBES_MYSQL_HEALTH",
+                                            "HOME_UPLOAD",
+                                            "AWS_S3",
+                                            "AUDIOINFRA",
+                                            "PRIVATE_AUDIOINFRA",
+                                            "PHOTOINFRA",
+                                            "PRIVATE_PHOTOINFRA",
+                                            "VIDEOINFRA",
+                                            "PRIVATE_VIDEOINFRA",
+                                            "NCLAVIS",
+                                            "NAVER_MAPS",
+                                            "PRIVATE_NAVER_MAPS",
+                                            "NAVER_SHOPPING",
+                                            "PRIVATE_NAVER_SHOPPING",
+                                            "NAVER_BOOKS",
+                                            "PRIVATE_NAVER_BOOKS",
+                                            "NAVER_BROADCASTS",
+                                            "PRIVATE_NAVER_BROADCASTS",
+                                            "NAVER_CALCULATOR",
+                                            "PRIVATE_NAVER_CALCULATOR",
+                                            "NAVER_EXHIBITIONS",
+                                            "PRIVATE_NAVER_EXHIBITIONS",
+                                            "NAVER_MOVIES",
+                                            "PRIVATE_NAVER_MOVIES",
+                                            "NAVER_MUSICS",
+                                            "PRIVATE_NAVER_MUSICS",
+                                            "NAVER_NEWS",
+                                            "PRIVATE_NAVER_NEWS",
+                                            "NAVER_BLOG",
+                                            "PRIVATE_NAVER_BLOG",
+                                            "NAVER_OGLINK",
+                                            "PRIVATE_NAVER_OGLINK",
+                                            "NAVER_PLACE",
+                                            "PRIVATE_NAVER_PLACE",
+                                            "NAVER_PERFORMANCES",
+                                            "PRIVATE_NAVER_PERFORMANCES",
+                                            "NAVER_TOPICNET",
+                                            "PRIVATE_NAVER_TOPICNET",
+                                            "NAVER_TRAVELS",
+                                            "NAVER_OVERSEA_TRAVELS",
+                                            "PRIVATE_NAVER_OVERSEA_TRAVELS",
+                                            "PRIVATE_NAVER_TRAVELS",
+                                            "NAVER_TRANSLATE",
+                                            "PRIVATE_NAVER_TRANSLATE",
+                                            "NAVER_SOCIALGW",
+                                            "PRIVATE_NAVER_SOCIALGW",
+                                            "NAVER_SPELLER",
+                                            "PRIVATE_NAVER_SPELLER",
+                                            "NAVER_STOREP",
+                                            "PRIVATE_NAVER_STOREP",
+                                            "NAVER_STICKERS",
+                                            "PRIVATE_NAVER_STICKERS",
+                                            "NAVER_BIFROST",
+                                            "PRIVATE_NAVER_BIFROST",
+                                            "NAVER_PAY",
+                                            "NAVER_OPEN_TALK",
+                                            "NAVER_NELO2",
+                                            "NAVER_LOGOUT",
+                                            "GOOGLE_MAPS",
+                                            "PRIVATE_GOOGLE_MAPS",
+                                            "AUTHORITY",
+                                            "MAPPING_SITE",
+                                            "SITE_DATA",
+                                            "SITE_TEMPLATE_DATA",
+                                            "SSR_HTML_DATA",
+                                            "VIEW_CACHE",
+                                            "QUERY_DATA",
+                                            "STYLE_RESOURCE",
+                                            "STYLE_MAPPER",
+                                            "MUSIC_BANNER_MAPPER",
+                                            "MUSIC_BANNER_RESOURCE",
+                                            "SENSE_TIME_LICENSE",
+                                            "SERVICE_CONFIG",
+                                            "META_INFO",
+                                            "TREVI_COMPONENT_GIPHY_STICKER",
+                                            "TREVI_COMPONENT_GOOGLE_MAP",
+                                            "TREVI_COMPONENT_NAVER_BLOG",
+                                            "TREVI_COMPONENT_NAVER_BOOK",
+                                            "TREVI_COMPONENT_NAVER_MAPS",
+                                            "TREVI_COMPONENT_NAVER_MOVIES",
+                                            "TREVI_COMPONENT_NAVER_NEWS",
+                                            "TREVI_COMPONENT_NAVER_OGLINK",
+                                            "TREVI_COMPONENT_NAVER_OPEN_TALK",
+                                            "TREVI_COMPONENT_NAVER_PAY",
+                                            "TREVI_COMPONENT_NAVER_PLACE",
+                                            "TREVI_COMPONENT_NAVER_PLAY",
+                                            "TREVI_COMPONENT_NAVER_SHOPPING",
+                                            "TREVI_COMPONENT_STYLE",
+                                            "TREVI_COMPONENT_TRACK",
+                                            "TREVI_PROXY_NAVER_PHOTO_INFRA",
+                                            "TREVI_PROXY_NAVER_VIDEO_INFRA",
+                                            "TREVI_PROXY_META_PUBLISH",
+                                            "TREVI_PROXY_SAMPLE_APP",
+                                            "TREVI_PROXY_SENSE_TIME",
+                                            "TREVI_EXTERNAL_VALIDATE",
+                                            "TREVI_EXTERNAL_MIGRATE",
+                                            "TREVI_ADMIN_SENSE_TIME",
+                                            "COMMON_STORAGE_MONGO"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "enum": [
+                                            "ALL",
+                                            "LOGIN_CHECK",
+                                            "CERTIFICATION",
+                                            "OLD_CERTIFICATION",
+                                            "CELL_BASE_API_LIST",
+                                            "ENVIRONMENT_AUTHENTICATION",
+                                            "DATA_LOG_COLLECTOR",
+                                            "SLACK",
+                                            "SIMPLE_COMMENT",
+                                            "SIMPLE_OPEN_POST",
+                                            "SIMPLE_CLOSE_POST",
+                                            "CREATE",
+                                            "CREATE_OPEN",
+                                            "CELL_CACHE",
+                                            "AUTH_CELL_CACHE",
+                                            "REDIS_CACHE",
+                                            "STORAGE",
+                                            "NAVER_CDN",
+                                            "NAVER_PRIVATE_CDN",
+                                            "NUBES",
+                                            "NUBES_MYSQL_HEALTH",
+                                            "HOME_UPLOAD",
+                                            "AWS_S3",
+                                            "AUDIOINFRA",
+                                            "PRIVATE_AUDIOINFRA",
+                                            "PHOTOINFRA",
+                                            "PRIVATE_PHOTOINFRA",
+                                            "VIDEOINFRA",
+                                            "PRIVATE_VIDEOINFRA",
+                                            "NCLAVIS",
+                                            "NAVER_MAPS",
+                                            "PRIVATE_NAVER_MAPS",
+                                            "NAVER_SHOPPING",
+                                            "PRIVATE_NAVER_SHOPPING",
+                                            "NAVER_BOOKS",
+                                            "PRIVATE_NAVER_BOOKS",
+                                            "NAVER_BROADCASTS",
+                                            "PRIVATE_NAVER_BROADCASTS",
+                                            "NAVER_CALCULATOR",
+                                            "PRIVATE_NAVER_CALCULATOR",
+                                            "NAVER_EXHIBITIONS",
+                                            "PRIVATE_NAVER_EXHIBITIONS",
+                                            "NAVER_MOVIES",
+                                            "PRIVATE_NAVER_MOVIES",
+                                            "NAVER_MUSICS",
+                                            "PRIVATE_NAVER_MUSICS",
+                                            "NAVER_NEWS",
+                                            "PRIVATE_NAVER_NEWS",
+                                            "NAVER_BLOG",
+                                            "PRIVATE_NAVER_BLOG",
+                                            "NAVER_OGLINK",
+                                            "PRIVATE_NAVER_OGLINK",
+                                            "NAVER_PLACE",
+                                            "PRIVATE_NAVER_PLACE",
+                                            "NAVER_PERFORMANCES",
+                                            "PRIVATE_NAVER_PERFORMANCES",
+                                            "NAVER_TOPICNET",
+                                            "PRIVATE_NAVER_TOPICNET",
+                                            "NAVER_TRAVELS",
+                                            "NAVER_OVERSEA_TRAVELS",
+                                            "PRIVATE_NAVER_OVERSEA_TRAVELS",
+                                            "PRIVATE_NAVER_TRAVELS",
+                                            "NAVER_TRANSLATE",
+                                            "PRIVATE_NAVER_TRANSLATE",
+                                            "NAVER_SOCIALGW",
+                                            "PRIVATE_NAVER_SOCIALGW",
+                                            "NAVER_SPELLER",
+                                            "PRIVATE_NAVER_SPELLER",
+                                            "NAVER_STOREP",
+                                            "PRIVATE_NAVER_STOREP",
+                                            "NAVER_STICKERS",
+                                            "PRIVATE_NAVER_STICKERS",
+                                            "NAVER_BIFROST",
+                                            "PRIVATE_NAVER_BIFROST",
+                                            "NAVER_PAY",
+                                            "NAVER_OPEN_TALK",
+                                            "NAVER_NELO2",
+                                            "NAVER_LOGOUT",
+                                            "GOOGLE_MAPS",
+                                            "PRIVATE_GOOGLE_MAPS",
+                                            "AUTHORITY",
+                                            "MAPPING_SITE",
+                                            "SITE_DATA",
+                                            "SITE_TEMPLATE_DATA",
+                                            "SSR_HTML_DATA",
+                                            "VIEW_CACHE",
+                                            "QUERY_DATA",
+                                            "STYLE_RESOURCE",
+                                            "STYLE_MAPPER",
+                                            "MUSIC_BANNER_MAPPER",
+                                            "MUSIC_BANNER_RESOURCE",
+                                            "SENSE_TIME_LICENSE",
+                                            "SERVICE_CONFIG",
+                                            "META_INFO",
+                                            "TREVI_COMPONENT_GIPHY_STICKER",
+                                            "TREVI_COMPONENT_GOOGLE_MAP",
+                                            "TREVI_COMPONENT_NAVER_BLOG",
+                                            "TREVI_COMPONENT_NAVER_BOOK",
+                                            "TREVI_COMPONENT_NAVER_MAPS",
+                                            "TREVI_COMPONENT_NAVER_MOVIES",
+                                            "TREVI_COMPONENT_NAVER_NEWS",
+                                            "TREVI_COMPONENT_NAVER_OGLINK",
+                                            "TREVI_COMPONENT_NAVER_OPEN_TALK",
+                                            "TREVI_COMPONENT_NAVER_PAY",
+                                            "TREVI_COMPONENT_NAVER_PLACE",
+                                            "TREVI_COMPONENT_NAVER_PLAY",
+                                            "TREVI_COMPONENT_NAVER_SHOPPING",
+                                            "TREVI_COMPONENT_STYLE",
+                                            "TREVI_COMPONENT_TRACK",
+                                            "TREVI_PROXY_NAVER_PHOTO_INFRA",
+                                            "TREVI_PROXY_NAVER_VIDEO_INFRA",
+                                            "TREVI_PROXY_META_PUBLISH",
+                                            "TREVI_PROXY_SAMPLE_APP",
+                                            "TREVI_PROXY_SENSE_TIME",
+                                            "TREVI_EXTERNAL_VALIDATE",
+                                            "TREVI_EXTERNAL_MIGRATE",
+                                            "TREVI_ADMIN_SENSE_TIME",
+                                            "COMMON_STORAGE_MONGO"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cell-module-version": {
+            "get": {
+                "tags": [
+                    "base-health-controller"
+                ],
+                "operationId": "getCellModuleVersion",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppVersion"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cell-actuator/v1/config/authorization": {
+            "get": {
+                "tags": [
+                    "CellCloudConfigTestController"
+                ],
+                "operationId": "testAuthorization",
+                "parameters": [
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CELL-API-TEST-ALLOW-PASSPORT",
+                        "in": "header",
+                        "description": "테스트 로그인 정보",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConfigAuthorizationAppInfoProperties"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConfigAuthorizationAppInfoProperties"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConfigAuthorizationAppInfoProperties"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cell-actuator/v1/config/authentication": {
+            "get": {
+                "tags": [
+                    "CellCloudConfigTestController"
+                ],
+                "operationId": "testAuthentication",
+                "parameters": [
+                    {
+                        "name": "SS-CELL-CERTIFICATION-TOKEN",
+                        "in": "header",
+                        "description": "증명토큰",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CELL-API-TEST-ALLOW-PASSPORT",
+                        "in": "header",
+                        "description": "테스트 로그인 정보",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "요청오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConfigAuthenticationAppInfoProperties"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버오류",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConfigAuthenticationAppInfoProperties"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "요청성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConfigAuthenticationAppInfoProperties"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cell-actuator/cell-http-connection": {
+            "get": {
+                "tags": [
+                    "cell-metrics-controller"
+                ],
+                "operationId": "cellHttpConnection",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": {
+                                        "type": "object",
+                                        "additionalProperties": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/actuator/health": {
+            "get": {
+                "tags": [
+                    "base-health-controller"
+                ],
+                "operationId": "tmpHealth",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "StorageCRUDCreateCommand": {
+                "required": [
+                    "dataJson"
+                ],
+                "type": "object",
+                "properties": {
+                    "dataJson": {
+                        "title": "유저가 저장할 dataJson 값. (Json String으로 입력)",
+                        "type": "object",
+                        "additionalProperties": {
+                            "title": "유저가 저장할 dataJson 값. (Json String으로 입력)",
+                            "type": "object",
+                            "example": [
+                                {
+                                    "testKey": "testValue",
+                                    "testKey2": "test2Value"
+                                },
+                                {
+                                    "testKey1": "testValue1"
+                                }
+                            ]
+                        },
+                        "example": [
+                            {
+                                "testKey": "testValue",
+                                "testKey2": "test2Value"
+                            },
+                            {
+                                "testKey1": "testValue1"
+                            }
+                        ]
+                    }
+                }
+            },
+            "StorageDataViewMapStringObject": {
+                "required": [
+                    "appName",
+                    "data",
+                    "model"
+                ],
+                "type": "object",
+                "properties": {
+                    "appName": {
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "model": {
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "data": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "object",
+                            "readOnly": true
+                        },
+                        "readOnly": true
+                    }
+                }
+            },
+            "SearchMap": {
+                "title": "검색할 key, value\r\n 생략하면 그냥 리스트 조회",
+                "required": [
+                    "queryOperationType"
+                ],
+                "type": "object",
+                "properties": {
+                    "queryOperationType": {
+                        "title": "검색할 값",
+                        "type": "object"
+                    }
+                }
+            },
+            "StorageCRUDOrderBy": {
+                "title": "정렬기준 ASC, DESC",
+                "type": "object",
+                "properties": {
+                    "orderByColumn": {
+                        "title": "정렬기준 Column (기본 값 createdDate)",
+                        "type": "string"
+                    },
+                    "orderByType": {
+                        "title": "정렬기준 오름차순(ASC), 내림차순(DESC)",
+                        "type": "string",
+                        "enum": [
+                            "ASC",
+                            "DESC"
+                        ]
+                    }
+                }
+            },
+            "StorageCRUDSearchCommand": {
+                "required": [
+                    "limit",
+                    "page",
+                    "pageLocation"
+                ],
+                "type": "object",
+                "properties": {
+                    "orderBy": {
+                        "$ref": "#/components/schemas/StorageCRUDOrderBy"
+                    },
+                    "criterionId": {
+                        "title": "현 페이지의 마지막, 혹은 첫 ID(PK) - pageLocation 값에 영향을 받는다.\r\n - pageLocation 값이 NEXT이면 다음페이지 이며 이때는 현 페이지의 마지막 ID(PK)\r\n - pageLocation 값이 PREVIOUS이면 이전페이지 이며 이때는 현 페이지의 첫번째 ID(PK)\r\n사용하지 않으면 첫 페이지를 조회하며 이때는 pageLocation에 영향을 받지 않는다.",
+                        "type": "string"
+                    },
+                    "pageLocation": {
+                        "title": "이전 다음 page location 사용 Flag (첫 페이지에서는 사용하지 않아도 된다.)",
+                        "type": "string",
+                        "enum": [
+                            "PREVIOUS",
+                            "NEXT"
+                        ]
+                    },
+                    "searchMap": {
+                        "title": "검색할 key, value\r\n 생략하면 그냥 리스트 조회",
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/components/schemas/SearchMap"
+                        }
+                    },
+                    "limit": {
+                        "title": "한번에 불러올 개수 / 생략하면 기본값 10개",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "page": {
+                        "title": "시작 페이지 번호 1부터 시작",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "withoutId": {
+                        "title": "아이디 검색 여부",
+                        "type": "boolean"
+                    }
+                }
+            },
+            "PageableObject": {
+                "type": "object",
+                "properties": {
+                    "offset": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "sort": {
+                        "$ref": "#/components/schemas/SortObject"
+                    },
+                    "pageSize": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "pageNumber": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "paged": {
+                        "type": "boolean"
+                    },
+                    "unpaged": {
+                        "type": "boolean"
+                    }
+                },
+                "readOnly": true
+            },
+            "SortObject": {
+                "type": "object",
+                "properties": {
+                    "empty": {
+                        "type": "boolean"
+                    },
+                    "sorted": {
+                        "type": "boolean"
+                    },
+                    "unsorted": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "StorageDataListViewListMapStringObject": {
+                "required": [
+                    "appName",
+                    "content",
+                    "model",
+                    "pageable",
+                    "total"
+                ],
+                "type": "object",
+                "properties": {
+                    "appName": {
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "model": {
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "content": {
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "type": "array",
+                            "readOnly": true,
+                            "items": {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "type": "object",
+                                    "readOnly": true
+                                },
+                                "readOnly": true
+                            }
+                        }
+                    },
+                    "pageable": {
+                        "$ref": "#/components/schemas/PageableObject"
+                    },
+                    "total": {
+                        "type": "integer",
+                        "format": "int64",
+                        "readOnly": true
+                    },
+                    "totalPages": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "totalElements": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "last": {
+                        "type": "boolean"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "number": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "sort": {
+                        "$ref": "#/components/schemas/SortObject"
+                    },
+                    "numberOfElements": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "first": {
+                        "type": "boolean"
+                    },
+                    "empty": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "SimpleOpenPostCreateCommand": {
+                "required": [
+                    "contents",
+                    "password",
+                    "postType",
+                    "title",
+                    "userName"
+                ],
+                "type": "object",
+                "properties": {
+                    "postType": {
+                        "type": "string",
+                        "enum": [
+                            "APP_TOKEN",
+                            "QUESTION",
+                            "ETC",
+                            "ALL"
+                        ]
+                    },
+                    "userName": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "contents": {
+                        "type": "string"
+                    }
+                }
+            },
+            "SimplePostView": {
+                "required": [
+                    "contents",
+                    "id",
+                    "isDeleted",
+                    "postType",
+                    "title",
+                    "userName"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "postType": {
+                        "type": "string",
+                        "readOnly": true,
+                        "enum": [
+                            "APP_TOKEN",
+                            "QUESTION",
+                            "ETC",
+                            "ALL"
+                        ]
+                    },
+                    "userName": {
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "email": {
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "userId": {
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "contents": {
+                        "type": "string"
+                    },
+                    "isDeleted": {
+                        "type": "boolean",
+                        "readOnly": true
+                    }
+                }
+            },
+            "SimplePostListCommand": {
+                "required": [
+                    "limit",
+                    "pageNo",
+                    "postType"
+                ],
+                "type": "object",
+                "properties": {
+                    "postType": {
+                        "type": "string",
+                        "enum": [
+                            "APP_TOKEN",
+                            "QUESTION",
+                            "ETC",
+                            "ALL"
+                        ]
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "pageNo": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "SimplePostListView": {
+                "required": [
+                    "isLastPage",
+                    "limit",
+                    "pageNo",
+                    "simplePostViewList"
+                ],
+                "type": "object",
+                "properties": {
+                    "limit": {
+                        "type": "integer",
+                        "format": "int32",
+                        "readOnly": true
+                    },
+                    "pageNo": {
+                        "type": "integer",
+                        "format": "int32",
+                        "readOnly": true
+                    },
+                    "simplePostViewList": {
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "$ref": "#/components/schemas/SimplePostView"
+                        }
+                    },
+                    "isLastPage": {
+                        "type": "boolean",
+                        "readOnly": true
+                    }
+                }
+            },
+            "Field": {
+                "required": [
+                    "short",
+                    "title",
+                    "value"
+                ],
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "value": {
+                        "type": "string"
+                    },
+                    "short": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "SlackAttachment": {
+                "required": [
+                    "author_icon",
+                    "author_name",
+                    "color",
+                    "fields",
+                    "footer",
+                    "footer_icon",
+                    "mrkdwn_in",
+                    "pretext",
+                    "text",
+                    "thumb_url",
+                    "title",
+                    "ts"
+                ],
+                "type": "object",
+                "properties": {
+                    "color": {
+                        "type": "string"
+                    },
+                    "pretext": {
+                        "type": "string"
+                    },
+                    "author_name": {
+                        "type": "string"
+                    },
+                    "author_link": {
+                        "type": "string"
+                    },
+                    "author_icon": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "title_link": {
+                        "type": "string"
+                    },
+                    "text": {
+                        "type": "string"
+                    },
+                    "fields": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Field"
+                        }
+                    },
+                    "thumb_url": {
+                        "type": "string"
+                    },
+                    "footer": {
+                        "type": "string"
+                    },
+                    "footer_icon": {
+                        "type": "string"
+                    },
+                    "ts": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "mrkdwn_in": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "description": "슬랙 메시지 (type: attachments)"
+            },
+            "SlackSendMessageCommand": {
+                "required": [
+                    "channel",
+                    "enableLinkNames",
+                    "enableMarkdown",
+                    "enableParse",
+                    "replyBroadcast",
+                    "unfurlLinks",
+                    "unfurlMedia"
+                ],
+                "type": "object",
+                "properties": {
+                    "channel": {
+                        "type": "string",
+                        "description": "슬랙 전송 채널"
+                    },
+                    "text": {
+                        "type": "string",
+                        "description": "슬랙 메시지 (type: text)"
+                    },
+                    "blocks": {
+                        "type": "string",
+                        "description": "슬랙 메시지 (type: blocks)"
+                    },
+                    "attachments": {
+                        "type": "array",
+                        "description": "슬랙 메시지 (type: attachments)",
+                        "items": {
+                            "$ref": "#/components/schemas/SlackAttachment"
+                        }
+                    },
+                    "threadTs": {
+                        "type": "string",
+                        "description": "스레드에 전송 시 필요한 스레드 timestamp (ts)"
+                    },
+                    "replyBroadcast": {
+                        "type": "boolean",
+                        "description": "channel 전체 알림 여부"
+                    },
+                    "enableParse": {
+                        "type": "boolean",
+                        "description": "하이퍼 링크 파싱 여부"
+                    },
+                    "enableLinkNames": {
+                        "type": "boolean",
+                        "description": "사용자 그룹을 찾아 연결할지 여부"
+                    },
+                    "metadata": {
+                        "type": "string",
+                        "description": "슬랙 이벤트 메타데이터"
+                    },
+                    "unfurlLinks": {
+                        "type": "boolean",
+                        "description": "슬랙 텍스트 기반 콘텐츠의 전개 활성화 여부"
+                    },
+                    "unfurlMedia": {
+                        "type": "boolean",
+                        "description": "슬랙 미디어 콘텐츠의 전개 활성화 여부"
+                    },
+                    "enableMarkdown": {
+                        "type": "boolean",
+                        "description": "슬랙 마크업 구문 분석 활성화 여부"
+                    },
+                    "botname": {
+                        "type": "string",
+                        "description": "슬랙 봇 이름"
+                    },
+                    "iconUrl": {
+                        "type": "string",
+                        "description": "슬랙 메시지 아이콘 이미지 URL"
+                    },
+                    "iconEmoji": {
+                        "type": "string",
+                        "description": "슬랙 메시지 아이콘 이모지"
+                    }
+                }
+            },
+            "TransporterData": {
+                "required": [
+                    "sentMessage"
+                ],
+                "type": "object",
+                "properties": {
+                    "sentMessage": {
+                        "type": "string"
+                    },
+                    "offset": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "exceptionMessage": {
+                        "type": "string"
+                    }
+                }
+            },
+            "SimpleCommentCreateCommand": {
+                "required": [
+                    "contents",
+                    "isAnonymous",
+                    "parentId",
+                    "type"
+                ],
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "NONE",
+                            "PARENT",
+                            "CHILD"
+                        ]
+                    },
+                    "parentId": {
+                        "type": "string"
+                    },
+                    "contents": {
+                        "type": "string"
+                    },
+                    "nickName": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "isAnonymous": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "SimpleCommentView": {
+                "required": [
+                    "contents",
+                    "id",
+                    "isDeleted",
+                    "nickName",
+                    "parentId"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "parentId": {
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "nickName": {
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "contents": {
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "isDeleted": {
+                        "type": "boolean",
+                        "readOnly": true
+                    }
+                }
+            },
+            "SimpleCommentListCommand": {
+                "required": [
+                    "limit",
+                    "pageNo"
+                ],
+                "type": "object",
+                "properties": {
+                    "limit": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "pageNo": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "SimpleCommentListView": {
+                "required": [
+                    "isLastPage",
+                    "limit",
+                    "pageNo",
+                    "simpleCommentViewList"
+                ],
+                "type": "object",
+                "properties": {
+                    "limit": {
+                        "type": "integer",
+                        "format": "int32",
+                        "readOnly": true
+                    },
+                    "pageNo": {
+                        "type": "integer",
+                        "format": "int32",
+                        "readOnly": true
+                    },
+                    "simpleCommentViewList": {
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "$ref": "#/components/schemas/SimpleCommentView"
+                        }
+                    },
+                    "isLastPage": {
+                        "type": "boolean",
+                        "readOnly": true
+                    }
+                }
+            },
+            "SimplePostCreateCommand": {
+                "required": [
+                    "contents",
+                    "postType",
+                    "title"
+                ],
+                "type": "object",
+                "properties": {
+                    "postType": {
+                        "type": "string",
+                        "enum": [
+                            "APP_TOKEN",
+                            "QUESTION",
+                            "ETC",
+                            "ALL"
+                        ]
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "contents": {
+                        "type": "string"
+                    }
+                }
+            },
+            "StorageGeneralDataViewMapStringObject": {
+                "required": [
+                    "appName",
+                    "data",
+                    "id",
+                    "model"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "appName": {
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "model": {
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "data": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "object",
+                            "readOnly": true
+                        },
+                        "readOnly": true
+                    }
+                }
+            },
+            "SimpleOpenPostUpdateCommand": {
+                "required": [
+                    "contents",
+                    "password",
+                    "title"
+                ],
+                "type": "object",
+                "properties": {
+                    "password": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "contents": {
+                        "type": "string"
+                    }
+                }
+            },
+            "SimpleCommentUpdateCommand": {
+                "required": [
+                    "contents",
+                    "isAnonymous"
+                ],
+                "type": "object",
+                "properties": {
+                    "contents": {
+                        "type": "string"
+                    },
+                    "nickName": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "isAnonymous": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "SimplePostUpdateCommand": {
+                "required": [
+                    "contents",
+                    "title"
+                ],
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "contents": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Result": {
+                "required": [
+                    "str"
+                ],
+                "type": "object",
+                "properties": {
+                    "str": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AppVersion": {
+                "required": [
+                    "appName",
+                    "hostName",
+                    "version"
+                ],
+                "type": "object",
+                "properties": {
+                    "appName": {
+                        "type": "string"
+                    },
+                    "version": {
+                        "type": "string"
+                    },
+                    "hostName": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ConfigAppPermissionInfo": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "adminEmail": {
+                        "type": "string"
+                    },
+                    "appPermission": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    },
+                    "users": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "ConfigAuthorizationAppInfoProperties": {
+                "required": [
+                    "infoMap"
+                ],
+                "type": "object",
+                "properties": {
+                    "infoMap": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/components/schemas/ConfigAppPermissionInfo"
+                        }
+                    }
+                }
+            },
+            "ConfigAppInfo": {
+                "required": [
+                    "allowPrivateRequest",
+                    "skipLoginCheck"
+                ],
+                "type": "object",
+                "properties": {
+                    "allowPrivateRequest": {
+                        "type": "boolean"
+                    },
+                    "skipLoginCheck": {
+                        "type": "boolean"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "adminEmails": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "token": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ConfigAuthenticationAppInfoProperties": {
+                "required": [
+                    "infoMap"
+                ],
+                "type": "object",
+                "properties": {
+                    "infoMap": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/components/schemas/ConfigAppInfo"
+                        }
+                    }
+                }
+            },
+            "StorageDataDeletedView": {
+                "required": [
+                    "appName",
+                    "deleted",
+                    "id",
+                    "model"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "appName": {
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "model": {
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "deleted": {
+                        "type": "boolean",
+                        "readOnly": true
+                    }
+                }
+            },
+            "SimpleOpenPostDeleteCommand": {
+                "required": [
+                    "password"
+                ],
+                "type": "object",
+                "properties": {
+                    "password": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "basicAuth": {
+                "type": "http",
+                "scheme": "basic"
+            }
+        }
+    }
+}
