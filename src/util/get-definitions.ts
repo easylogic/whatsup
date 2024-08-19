@@ -6,6 +6,8 @@ const OPEN_MENU_KEYS = 'selected-open-menu-keys'
 const SELECTED_MENU_ITEM_KYES = 'selected-menu-item-keys'
 const API_OBJECT = 'api-object'
 
+console.log(swaggerJSON);
+
 export const firstCategory = Object.keys(swaggerJSON)[0];
 
 export const getCategoryName = (): string => {

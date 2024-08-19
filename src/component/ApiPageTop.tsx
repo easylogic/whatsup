@@ -29,7 +29,7 @@ function ApiPageTop() {
 
   const json = getApiJSON(category);
 
-  console.log(json, api);
+  console.log(api, json);
 
   return (
     <>
@@ -56,7 +56,7 @@ function ApiPageTop() {
               },
               {
                   path: 'host',
-                  breadcrumbName: `https://${json.host}`,
+                  breadcrumbName: `https://${json.servers?.[0]?.url}`,
               },
             ]}}
         >

@@ -3,7 +3,7 @@ import {Button, Row, Col, Tabs, Badge } from 'antd';
 import { useRecoilValue } from 'recoil';
 
 import {categoryViewState, apiViewState, responseViewState} from '../state/response-state'
-import { APIParameter } from '../constant/api';
+import { APIParameter, APISummary } from '../constant/api';
 
 import FileInput from './items/FileInput';
 import BooleanInput from './items/BooleanInput';
@@ -225,27 +225,29 @@ export function ApiTable(props: ApiTableProps) {
         )
     }
 
-    function createFormItemBody (it: any) {
+    function createFormItemBody (it: APISummary['requestBody']) {
         // let info = {} ; 
         let schema: any = null;
 
-        if (it.schema && it.schema?.$ref) {
-            schema = getDefinitionsSchema(it.schema, definitions)
+        if (it.content) {
+            schema = getDefinitions((it.content as any)['application/json'].schema, responseObject.definitions);
         } else {
-            schema = it.schema;
+            schema = getDefinitions(it.schema, responseObject.definitions);
         }
-
-        const inputValues = {...(getFieldValue(it.name) || {})}
+        const inputValues = {...(getFieldValue('requestBody') || {})}
 
         return (
-            <Row style={{paddingTop: 10}} key={`key-${it.name}`}>
+            <Row style={{paddingTop: 10}} key={`key-requestBody`}>
                 <Col span={4} style={{wordBreak: 'break-all'}}>
-                    {it.name}
+                    RequestBody
                     {it.required ? <div style={{color: 'gray', fontSize: 11, fontStyle: 'italic'}}>(required)</div> : ''}
                 </Col>
                 <Col span={20}>
                     description - {it.description}
-                    <ObjectInput inputValues={inputValues} item={it} schema={schema} onChange={handleChangeValue} />
+                    <ObjectInput inputValues={inputValues} item={{
+                        name: 'requestBody',
+                        schema: schema
+                    }} schema={schema} onChange={handleChangeValue} />
                 </Col>
             </Row>
         )
@@ -269,6 +271,20 @@ export function ApiTable(props: ApiTableProps) {
         )
     }
 
+    function createFormRequestBody (requestBody: APISummary['requestBody'], func: (it: APISummary['requestBody']) => any) {
+        console.log(requestBody);
+
+        return (requestBody) && (
+            <Tabs.TabPane tab={            
+                <span style={{fontSize: 16, textTransform: 'capitalize',}}>
+                    Request Body 
+                </span>  
+            } key={`RequestBody`}>
+                {func(requestBody)}
+            </Tabs.TabPane>
+        )
+    }
+
  return (
      <div>
         <div>
@@ -288,9 +304,10 @@ export function ApiTable(props: ApiTableProps) {
             <Tabs>
                 {createFormType('path', createFormItem)}
                 {createFormType('query', createFormItem)}
-                {createFormType('formData', createFormItem)}        
-                {createFormType('body', createFormItemBody)}
-                {createFormType('header', createFormItem)}        
+                {/* {createFormType('formData', createFormItem)}         */}
+                {/* {createFormType('body', createFormItemBody)} */}
+                {createFormType('header', createFormItem)}    
+                {createFormRequestBody(api.object?.requestBody!, createFormItemBody)}    
             </Tabs>
         </div>
 

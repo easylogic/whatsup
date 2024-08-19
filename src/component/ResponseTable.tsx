@@ -12,6 +12,8 @@ interface ResponseTableProps {
 export function ResponseTable(props: ResponseTableProps) {
   const { definitions, responseObject, requestObject, api } = props.responseObject;
 
+  console.log(props);
+
   const dataSource = Object.keys(api?.object?.responses || {}).map((code) => {
     const res = api?.object?.responses[code];
 

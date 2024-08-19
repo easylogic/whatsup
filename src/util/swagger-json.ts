@@ -1,7 +1,34 @@
 import data from '../data';
 
 export interface CategoryInterface {
-  [key: string]: any;
+  [key: string]: {
+    tagsKeys: {
+      [key: string]: any[];
+    };
+    tags: any[];
+    title: string;
+    description: string;
+    servers: {
+      url: string;
+    }[];
+    basePath: string;
+    definitions: DefinitionInterface;
+    menus: any[];
+    components?: {
+      schemas: {
+        [key: string]: {
+          properties: {
+            [key: string]: any;
+          };
+          required: string[];
+          type: "object" | "array" | "string" | "number" | "boolean" | "integer" | "null" | "file" | "any" | "enum" | string;
+        };
+      };
+      securitySchemes: {
+        [key: string]: any;
+      };
+    };
+  };
 }
 
 export interface DefinitionInterface {
@@ -39,6 +66,8 @@ function convertJSON(json: any) {
     host: json.host,
     basePath: json.basePath,
     definitions: json.definitions,
+    servers: json.servers,
+    components: json.components,
     menus,
   };
 }
