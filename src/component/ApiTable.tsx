@@ -229,12 +229,29 @@ export function ApiTable(props: ApiTableProps) {
         )
     }
 
+    function getContentSchema (content: any) {
+
+        if (content['application/octet-stream']) {
+            return content['application/octet-stream'].schema
+        }
+
+        if (content['application/x-www-form-urlencoded']) {
+            return content['application/x-www-form-urlencoded'].schema
+        }
+
+        if (content['application/json'].schema) {
+            return content['application/json'].schema
+        }
+
+        return content['application/json'].schema
+    }
+
     function createFormItemBody (it: APISummary['requestBody']) {
         // let info = {} ; 
         let schema: any = null;
 
         if (it.content) {
-            schema = getDefinitions((it.content as any)['application/json'].schema, responseObject.definitions || json.components);
+            schema = getDefinitions(getContentSchema(it.content), responseObject.definitions || json.components);
         } else {
             schema = getDefinitions(it.schema, responseObject.definitions || json.components);
         }
@@ -299,6 +316,13 @@ export function ApiTable(props: ApiTableProps) {
             </div>
         )}    
 
+        {dataSource.length === 0 && (
+            <div style={{marginBottom: 15}}>
+                No Parameters
+            </div>
+        )}    
+
+{dataSource.length > 0 && (
         <div style={{
                 padding: 10, 
                 backgroundColor: 'rgba(255, 255, 255, 1)', 
@@ -314,6 +338,8 @@ export function ApiTable(props: ApiTableProps) {
                 {createFormRequestBody(api.object?.requestBody!, createFormItemBody)}    
             </Tabs>
         </div>
+
+        )}
 
         <div style={{marginTop: 15}}>
             <Button type="primary" size="large" onClick={() => sendApi()} loading={isLoading} style={{width: '100%'}}>Submit</Button>

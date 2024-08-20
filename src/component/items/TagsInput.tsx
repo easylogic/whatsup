@@ -10,7 +10,7 @@ interface TagsInputProps {
 
 export default function TagsInput (props: TagsInputProps) {
     const { item, inputValues, onChange } = props; 
-    const items = item.schema.items || item.items || {};
+    const items = item.schema?.items || item.items || {};
 
     function changeFieldValue (value: string[]|number[]) {
         onChange(item.name, value);
