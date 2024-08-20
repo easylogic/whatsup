@@ -155,9 +155,9 @@ export function ApiTable(props: ApiTableProps) {
         let localValues: {[key:string]: any} = {}
         dataSource.filter(it => it.in === 'body').forEach(it => {
             // let info = {} ; 
-            let schema = getDefinitions(it.schema, responseObject.definitions);
+            let schema = getDefinitions(it.schema, responseObject.definitions || json.components);
 
-            localValues[it.name] = schemaToJSON(schema, responseObject.definitions)
+            localValues[it.name] = schemaToJSON(schema, responseObject.definitions || json.components)
         })
 
         handleApiParams({...localValues, ...getGlobalInputValues()});
@@ -171,14 +171,14 @@ export function ApiTable(props: ApiTableProps) {
 
     function createFormItem (it: APIParameter, rowIndex: number) {
 
-
+        const itemType = it.schema?.type || it.type;
         let schema = null; 
-        if (it.schema.type === 'array') {
+        if (itemType === 'array') {
             if (it.items.$ref) {
-                schema = getDefinitionsSchema(it.items, responseObject.definitions)
+                schema = getDefinitionsSchema(it.items, responseObject.definitions || json.components)
             }
         } else if (it.$ref) {
-            schema = getDefinitionsSchema(it, responseObject.definitions)            
+            schema = getDefinitionsSchema(it, responseObject.definitions || json.components)            
         }
 
 
@@ -192,30 +192,30 @@ export function ApiTable(props: ApiTableProps) {
                 </Col>
                 <Col span={20}>
 
-                {it.schema.type === 'file' && (
+                {itemType === 'file' && (
                     <FileInput item={it} inputValues={inputValues} onChange={handleChangeValue} />
                 )}
-                {it.schema.type === 'boolean' && (
+                {itemType === 'boolean' && (
                     <BooleanInput item={it} inputValues={Boolean(inputValues)} onChange={handleChangeValue} />
                 )}
 
-                {(it.schema.type === 'string' && Boolean(it.enum) === false) && (  // enum 이 없으면 일반 텍스트 
+                {(itemType === 'string' && Boolean(it.enum) === false) && (  // enum 이 없으면 일반 텍스트 
                     <TextInput item={it} inputValues={inputValues} onChange={handleChangeValue} />
                 )}
 
-                {(it.schema.type === 'string' && it.enum) && (     // enum 이 있으면 고정된 텍스트 , select 로 표현 
+                {(itemType === 'string' && it.enum) && (     // enum 이 있으면 고정된 텍스트 , select 로 표현 
                     <SelectInput item={it}  inputValues={inputValues} onChange={handleChangeValue} />
                 )}
 
-                {(it.schema.type === 'array' && it.enum) && (     // enum 이 있으면 고정된 텍스트 , select 로 표현 
+                {(itemType === 'array' && it.enum) && (     // enum 이 있으면 고정된 텍스트 , select 로 표현 
                     <SelectInput item={it} inputValues={inputValues} onChange={handleChangeValue} />
                 )}              
 
-                {(it.schema.type === 'array' && it.collectionFormat) && (     
+                {(itemType === 'array' && it.collectionFormat) && (     
                     <TagsInput item={it} inputValues={inputValues} onChange={handleChangeValue} />
                 )}                  
 
-                {['number', 'integer', 'float', 'double', 'int32', 'int64'].includes(it.schema.type) && (
+                {['number', 'integer', 'float', 'double', 'int32', 'int64'].includes(itemType) && (
                     <NumberInput item={it} inputValues={inputValues} onChange={handleChangeValue} />
                 )}
 
@@ -230,10 +230,11 @@ export function ApiTable(props: ApiTableProps) {
         let schema: any = null;
 
         if (it.content) {
-            schema = getDefinitions((it.content as any)['application/json'].schema, responseObject.definitions);
+            schema = getDefinitions((it.content as any)['application/json'].schema, responseObject.definitions || json.components);
         } else {
-            schema = getDefinitions(it.schema, responseObject.definitions);
+            schema = getDefinitions(it.schema, responseObject.definitions || json.components);
         }
+        
         const inputValues = {...(getFieldValue('requestBody') || {})}
 
         return (
@@ -272,7 +273,6 @@ export function ApiTable(props: ApiTableProps) {
     }
 
     function createFormRequestBody (requestBody: APISummary['requestBody'], func: (it: APISummary['requestBody']) => any) {
-        console.log(requestBody);
 
         return (requestBody) && (
             <Tabs.TabPane tab={            

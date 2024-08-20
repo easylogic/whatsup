@@ -6,8 +6,6 @@ const OPEN_MENU_KEYS = 'selected-open-menu-keys'
 const SELECTED_MENU_ITEM_KYES = 'selected-menu-item-keys'
 const API_OBJECT = 'api-object'
 
-console.log(swaggerJSON);
-
 export const firstCategory = Object.keys(swaggerJSON)[0];
 
 export const getCategoryName = (): string => {
@@ -88,9 +86,9 @@ export const getRealReferenceName = (ref: string) => {
     if (ref.includes('components')) {
         const fullName = ref.split('#')[1];
 
-        const className = fullName.split('/').pop() || ""
+        const [, , typeName, className] = fullName.split('/');
 
-        return { fullName, className}
+        return { fullName: typeName, className}
     }
 
     return {
@@ -102,7 +100,7 @@ export const getRealReferenceName = (ref: string) => {
 export function getDefinitionsSchema(item: any, definitions: any) : any {
     if (item?.$ref) {
         const refName = getRealReferenceName(item.$ref)
-        return definitions[refName!.className]
+        return definitions[refName!.className] || definitions[refName!.fullName][refName!.className] || {}
     }
 
     return {}
@@ -119,7 +117,8 @@ export function getDefinitions(item: any, definitions: any): any {
 
     if (item?.$ref) {
         const refName = getRealReferenceName(item.$ref)
-        let schema = definitions?.[refName.className] || {}
+        let schema = definitions?.[refName.className] || definitions?.[refName!.fullName][refName!.className] || {}
+
         let properties = schema?.properties || {}
         let newProperties = {} as {[key: string]: any}
         Object.keys(properties).forEach(key => {
@@ -133,27 +132,10 @@ export function getDefinitions(item: any, definitions: any): any {
                 newProperties[key].items = getDefinitions(prop.items, definitions)
             }
 
-            if (prop.type) {
-
-                if (prop.type === 'array') { 
-                    newProperties[key] = [
-                        newProperties[key].items
-                    ]
-                } else {
-                    newProperties[key] = [
-                        prop.type,
-                        prop.format ? `(${prop.format})` : ''
-                    ].filter(Boolean).join('')
-                }
-
-
-            }
         })
 
-        const objectKey = `${refName.fullName}`;
-
         let result = {
-            [objectKey]: newProperties
+            'properties': newProperties
         }
 
         return result; 

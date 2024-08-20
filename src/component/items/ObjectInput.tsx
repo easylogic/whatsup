@@ -9,9 +9,9 @@ import SelectInput from './SelectInput';
 import TagsInput from './TagsInput';
 import NumberInput from './NumberInput';
 import JSONArrayInput from './JSONArrayInput';
-import { responseViewState } from '../../state/response-state';
+import { apiViewState, categoryViewState, responseViewState } from '../../state/response-state';
 import { useRecoilValue } from 'recoil';
-import { getDefinitionsSchema } from '../../util/get-definitions';
+import { getApiJSON, getDefinitionsSchema } from '../../util/get-definitions';
 import TypeHelpViewer from '../viewer/TypeHelpViewer';
 import SubObjectInput from './SubObjectInput';
 import { APIParameter } from '../../constant/api';
@@ -64,6 +64,7 @@ function schemaToJSON(schema: any, definitions: any) {
 
     let obj: JSONInterface = {}
     
+    
     if (schema.type) {
         switch(schema.type) {
         case 'object':
@@ -90,7 +91,9 @@ function schemaToJSON(schema: any, definitions: any) {
 
 export default function ObjectInput (props: ObjectInputProps) {
     const { item, schema, inputValues = {}, onChange } = props; 
+    const category = useRecoilValue(categoryViewState);
     const responseObject = useRecoilValue(responseViewState);    
+    const json = getApiJSON(category);       
     const [localInputValues, setLocalInputValues] = useState(inputValues);
 
     function onChangeField(field: string, value: any) {
@@ -107,13 +110,15 @@ export default function ObjectInput (props: ObjectInputProps) {
 
     function createFormItem (it: APIParameter, rowIndex: number) {
 
+        const itemType = it.schema?.type || it.type;
+
         let schema = null; 
-        if (it.schema.type === 'array') {
+        if (itemType === 'array') {
             if (it.items.$ref) {
-                schema = getDefinitionsSchema(it.items, responseObject.definitions)
+                schema = getDefinitionsSchema(it.items, responseObject.definitions || json.components)
             }
         } else if (it.$ref) {
-            schema = getDefinitionsSchema(it, responseObject.definitions)            
+            schema = getDefinitionsSchema(it, responseObject.definitions || json.components)            
         }
 
         return (
@@ -121,55 +126,56 @@ export default function ObjectInput (props: ObjectInputProps) {
             <Row style={{paddingTop: 10}} key={`row-${rowIndex}`}>
                 <Col span={4} style={{wordBreak: 'break-all'}}>{it.name} &nbsp;</Col>
                 <Col span={20}>
-                    {it.schema.type === 'file' && (
+                    {itemType === 'file' && (
                         <FileInput item={it} inputValues={localInputValues[it.name]} onChange={onChangeField} />
                     )}
-                    {it.schema.type === 'boolean' && (
+                    {itemType === 'boolean' && (
                         <BooleanInput item={it} inputValues={localInputValues[it.name]} onChange={onChangeField} />
                     )}
         
-                    {(it.schema.type === 'string' && Boolean(it.enum) === false) && (  // enum 이 없으면 일반 텍스트 
+                    {(itemType === 'string' && Boolean(it.enum) === false) && (  // enum 이 없으면 일반 텍스트 
                         <TextInput item={it} inputValues={localInputValues[it.name]} onChange={onChangeField} />
                     )}
         
-                    {(it.schema.type === 'string' && it.enum) && (     // enum 이 있으면 고정된 텍스트 , select 로 표현 
+                    {(itemType === 'string' && it.enum) && (     // enum 이 있으면 고정된 텍스트 , select 로 표현 
                         <SelectInput item={it} inputValues={localInputValues[it.name]} onChange={onChangeField} />
                     )}
         
-                    {(it.schema.type === 'array' && it.enum) && (     // enum 이 있으면 고정된 텍스트 , select 로 표현 
+                    {(itemType === 'array' && it.enum) && (     // enum 이 있으면 고정된 텍스트 , select 로 표현 
                         <SelectInput item={it} inputValues={localInputValues[it.name]} onChange={onChangeField} />                
                     )}              
         
-                    {(it.schema.type === 'array' && it.collectionFormat) && (     
+                    {(itemType === 'array' && it.collectionFormat) && (     
                         <TagsInput item={it} inputValues={localInputValues[it.name]} onChange={onChangeField} />
                     )}                  
 
-                    {(it.schema.type === 'array' && it.items && it.items.type) && (     
+                    {(itemType === 'array' && it.items && it.items.type) && (     
                         <TagsInput item={it} inputValues={localInputValues[it.name]} onChange={onChangeField} />
                     )} 
 
-                    {(it.schema.type === 'array' && it.items && it.items.$ref) && (     
-                        <JSONArrayInput item={it} schema={schema}  inputValues={localInputValues[it.name]} onChange={onChangeField} />
+                    {(itemType === 'array' && it.items && (it.items.$ref || it.items.properties)) && (     
+                        <JSONArrayInput item={it} schema={it}  inputValues={localInputValues[it.name]} onChange={onChangeField} />
                     )}                                                  
 
-                    {(it.$ref) && (
-                        <SubObjectInput item={it} schema={schema}  inputValues={localInputValues[it.name] || {}} onChange={(name, value) => {
+                    {(it.$ref || it.properties) && (
+                        <SubObjectInput item={it} schema={it}  inputValues={localInputValues[it.name] || {}} onChange={(name, value) => {
                             onChangeField(name, JSON.parse(value))
                         }} />
                     )}
         
-                    {['number', 'integer', 'float', 'double', 'int32', 'int64'].includes(it.schema.type) && (
+                    {['number', 'integer', 'float', 'double', 'int32', 'int64'].includes(itemType) && (
                         <NumberInput item={it}  inputValues={localInputValues[it.name]} onChange={onChangeField} />
                     )}
         
-                    <TypeHelpViewer item={it} schema={schema} />
+                    <TypeHelpViewer item={it} schema={schema?.properties || {}} />
                 </Col>
             </Row>
 
         )
     }
 
-    const inputValueJSONString = localInputValues ? JSON.stringify(localInputValues, null, 4) : schemaToJSON(schema || {}, responseObject.definitions)
+    const inputValueJSONString = localInputValues ? JSON.stringify(localInputValues, null, 4) : schemaToJSON(schema.properties || {}, responseObject.definitions || json.components);
+
     return (
         <Tabs defaultActiveKey="1">
             <TabPane tab="Data" key="1">

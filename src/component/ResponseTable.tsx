@@ -2,23 +2,31 @@ import React from 'react';
 import JSONViewer from './viewer/JSONViewer';
 import ListViewer from './viewer/ListViewer';
 import { Tabs, Alert } from 'antd';
-import { getDefinitions } from '../util/get-definitions';
+import { getApiJSON, getDefinitions } from '../util/get-definitions';
 import { Schema } from '../constant/api';
+import { useRecoilValue } from 'recoil';
+import { apiViewState, categoryViewState } from '../state/response-state';
 
 interface ResponseTableProps {
   responseObject: any;
 }
 
 export function ResponseTable(props: ResponseTableProps) {
-  const { definitions, responseObject, requestObject, api } = props.responseObject;
+  const category = useRecoilValue(categoryViewState);
+  const api = useRecoilValue(apiViewState);
+  const json = getApiJSON(category);       
 
-  console.log(props);
+  const { definitions, responseObject, requestObject } = props.responseObject;
 
   const dataSource = Object.keys(api?.object?.responses || {}).map((code) => {
-    const res = api?.object?.responses[code];
+    const res = api?.object?.responses[+code];
 
-    const contentType = Object.values(res.content)[0] as { schema: Schema };
-    let schema = getDefinitions(contentType.schema, definitions);
+    let schema = '';
+
+    if (res?.content) {
+      const contentType = Object.values(res?.content || {})[0];
+      schema = getDefinitions(contentType.schema, definitions || json.components);
+    }
 
     return {
       ...res,      
@@ -31,7 +39,7 @@ export function ResponseTable(props: ResponseTableProps) {
 
     <div>
       <Tabs defaultActiveKey="1">
-        {Boolean(requestObject) && (
+        {(Boolean(requestObject) && Object.keys(requestObject).length )  && (
           <Tabs.TabPane tab="Request" key="5">
             <JSONViewer id="request" title="Request" json={requestObject} /> 
           </Tabs.TabPane>

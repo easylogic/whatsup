@@ -13,7 +13,7 @@ export default function TextInput (props: TextInputProps) {
 
     return <Input 
                 value={inputValues} 
-                placeholder={item.description}                 
+                placeholder={item.description || item.example || item.name}                 
                 onChange ={(e) => {
                 onChange(item.name, e.target.value)
             }}

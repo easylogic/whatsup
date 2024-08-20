@@ -1,6 +1,12 @@
 export interface Schema {
     $ref: string;
     type: string;
+    format: string;
+    items: Schema;
+    enum: string[];
+    properties: {
+        [key: string]: Schema;
+    };
 }
 
 export interface APIParameter {
@@ -14,10 +20,19 @@ export interface APIParameter {
     items: Schema;
     $ref: string;
     collectionFormat: string;
+    properties: {
+        [key: string]: Schema;
+    };
 }
 
 export interface APIResponse {
-
+    description: string;
+    schema: Schema;
+    content: {
+        [key: string]: {
+            schema: Schema;
+        }
+    }
 }
 
 export interface APISummary {

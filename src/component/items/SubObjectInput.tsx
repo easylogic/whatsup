@@ -27,8 +27,6 @@ export default function SubObjectInput (props: ObjectInputProps) {
     const responseObject = useRecoilValue(responseViewState);    
     const [localInputValues, setLocalInputValues] = useState(inputValues);
 
-    // console.log('subobject',localInputValues, inputValues);
-
     function onChangeField(field: string, value: any) {
         const customValues = {...localInputValues, [field]: value}
         onChange(item.name, JSON.stringify(customValues, null, 4));
@@ -41,8 +39,9 @@ export default function SubObjectInput (props: ObjectInputProps) {
 
     function createFormItem (it: APIParameter, index: number) {    
 
+        const itemType = it.schema?.type || it.type;
         let schema = null; 
-        if (it.schema.type === 'array') {
+        if (itemType === 'array') {
             if (it.items.$ref) {
                 schema = getDefinitionsSchema(it.items, responseObject.definitions)
             }
@@ -58,46 +57,46 @@ export default function SubObjectInput (props: ObjectInputProps) {
                 <Col span={3} style={{textAlign: 'right'}}>{it.name} &nbsp;</Col>
                 <Col span={21}>
   
-                {it.schema.type === 'file' && (
+                {itemType === 'file' && (
                     <FileInput item={it} inputValues={localValues} onChange={onChangeField} />
                 )}
-                {it.schema.type === 'boolean' && (
+                {itemType === 'boolean' && (
                     <BooleanInput item={it}  inputValues={localValues} onChange={onChangeField} />
                 )}
     
-                {(it.schema.type === 'object') && ( 
+                {(itemType === 'object') && ( 
                     <TextInput item={it}  inputValues={localValues} onChange={onChangeField} />
                 )}
 
-                {(it.schema.type === 'string' && Boolean(it.enum) === false) && (  // enum 이 없으면 일반 텍스트 
+                {(itemType === 'string' && Boolean(it.enum) === false) && (  // enum 이 없으면 일반 텍스트 
                     <TextInput item={it} inputValues={localValues} onChange={onChangeField} />
                 )}                
     
-                {(it.schema.type === 'string' && it.enum) && (     // enum 이 있으면 고정된 텍스트 , select 로 표현 
+                {(itemType === 'string' && it.enum) && (     // enum 이 있으면 고정된 텍스트 , select 로 표현 
                     <SelectInput item={it} inputValues={localValues} onChange={onChangeField} />
                 )}
     
-                {(it.schema.type === 'array' && it.enum) && (     // enum 이 있으면 고정된 텍스트 , select 로 표현 
+                {(itemType === 'array' && it.enum) && (     // enum 이 있으면 고정된 텍스트 , select 로 표현 
                     <SelectInput item={it} inputValues={localValues} onChange={onChangeField} />                
                 )}              
     
-                {(it.schema.type === 'array' && it.collectionFormat) && (     
+                {(itemType === 'array' && it.collectionFormat) && (     
                     <TagsInput item={it} inputValues={localValues} onChange={onChangeField} />
                 )}                  
 
-                {(it.schema.type === 'array' && it.items && it.items.type) && (     
+                {(itemType === 'array' && it.items && it.items.type) && (     
                     <TagsInput item={it} inputValues={localValues} onChange={onChangeField} />
                 )} 
 
-                {(it.schema.type === 'array' && it.items && it.items.$ref) && (     
+                {(itemType === 'array' && it.items && it.items.$ref) && (     
                     <JSONArrayInput item={it} schema={schema} inputValues={localValues} onChange={onChangeField} />
                 )}
 
-                {(it.$ref) && (
+                {(it.$ref || it.properties) && (
                     <JSONObjectInput item={it} schema={schema} inputValues={localValues} onChange={onChangeField} />
                 )}
     
-                {['number', 'integer', 'float', 'double', 'int32', 'int64'].includes(it.schema.type) && (
+                {['number', 'integer', 'float', 'double', 'int32', 'int64'].includes(itemType) && (
                     <NumberInput item={it} inputValues={localValues} onChange={onChangeField} />
                 )}
     

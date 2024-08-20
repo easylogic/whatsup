@@ -29,8 +29,6 @@ function ApiPageTop() {
 
   const json = getApiJSON(category);
 
-  console.log(api, json);
-
   return (
     <>
         <Alert message={<ReactMarkdown source={json.description}/>} type="info" />
@@ -43,7 +41,7 @@ function ApiPageTop() {
                 <div>
                   <Tag color="purple">Controller</Tag> {api.object?.tags.map(tag => {
                     const tagInfo = json.tags.find(it => it.name === tag);
-                    return <Tag key={tag} color="purple">{tag} - {tagInfo.description}</Tag>
+                    return <Tag key={tag} color="purple">{tag} - {tagInfo?.description}</Tag>
                   })}
                 </div>
                 <div>{getTag(api.method)} {json.basePath}{api.path}</div>  

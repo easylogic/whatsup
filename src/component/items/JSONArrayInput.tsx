@@ -4,8 +4,8 @@ import {Row, Col, Button } from 'antd';
 
 import SubObjectInput from './SubObjectInput';
 import { useRecoilValue } from 'recoil';
-import { getDefinitions, clone } from '../../util/get-definitions';
-import { responseViewState } from '../../state/response-state';
+import { getDefinitions, clone, getApiJSON } from '../../util/get-definitions';
+import { apiViewState, categoryViewState, responseViewState } from '../../state/response-state';
 import NumberInput from './NumberInput';
 import BooleanInput from './BooleanInput';
 import SelectInput from './SelectInput';
@@ -28,13 +28,15 @@ interface Data {
 
 export default function JSONArrayInput (props: JSONInputProps) {
     const { item, schema, inputValues = [], onChange } = props; 
+    const category = useRecoilValue(categoryViewState);
+    const json = getApiJSON(category);       
     const responseObject = useRecoilValue(responseViewState);    
     const [localInputValues, setLocalInputValues] = useState(inputValues);
 
-    // console.log('array',localInputValues, inputValues);
+    const itemType = item?.schema?.type || item.type;
+    const properties = ( schema?.properties || item.items.properties || {})
 
-    const inputList = Object.keys(schema?.properties||{}).map(key => {
-        const properties = (schema?.properties || {})
+    const inputList = Object.keys(properties||{}).map(key => {
          return { key, value: properties[key] } as any 
      })  
 
@@ -88,51 +90,52 @@ export default function JSONArrayInput (props: JSONInputProps) {
 
         it = {...it, name: key}
         const arrayInputValues = clone(getFieldValue(index, key))
+        const itemType = it.schema?.type || it.type;
 
-        if(['number', 'integer', 'float', 'double', 'int32', 'int64'].includes(it.schema.type)) {
+        if(['number', 'integer', 'float', 'double', 'int32', 'int64'].includes(itemType)) {
             return <NumberInput item={it} inputValues={arrayInputValues} onChange={(_: any, value) => {
                 onChangeField(index, key, value)
             }} />
         }
 
-        if (it.schema.type === 'boolean') {
+        if (itemType === 'boolean') {
             return <BooleanInput item={it} inputValues={Boolean(arrayInputValues)} onChange={(_: any, value) => {
                 onChangeField(index, key, value)
             }} />
         }
 
-        if(it.schema.type === 'string' && Boolean(it.enum) === false) {
+        if(itemType === 'string' && Boolean(it.enum) === false) {
             return <TextInput item={it} inputValues={arrayInputValues} onChange={(_: any, value) => {
                 onChangeField(index, key, value)
             }} />
         }
 
-        if (it.schema.type === 'string' && it.enum) {
+        if (itemType === 'string' && it.enum) {
             return <SelectInput item={it} inputValues={arrayInputValues} onChange={(_: any, value) => {
                 onChangeField(index, key, value)
             }} />            
         }
     
 
-        if(it.schema.type === 'array' && it.enum) {
+        if(itemType === 'array' && it.enum) {
             return <SelectInput item={it} inputValues={arrayInputValues} onChange={(_: any, value) => {
                 onChangeField(index, key, value)
             }} />
         }
 
-        if(it.schema.type === 'array' && it.collectionFormat) {
+        if(itemType === 'array' && it.collectionFormat) {
             return <TagsInput item={it} inputValues={arrayInputValues} onChange={(_: any, value) => {
                 onChangeField(index, key, value)
             }} />
         }
 
-        if (it.schema.type === 'array' && it.items && it.items.type)  {
+        if (itemType === 'array' && it.items && it.items.type)  {
             return <TagsInput item={it} inputValues={arrayInputValues} onChange={(_: any, value) => {
                 onChangeField(index, key, value)
             }} />
         }
 
-        if (!it.schema.type) {
+        if (!itemType) {
             return <TextInput item={{...it, ...schema}} inputValues={arrayInputValues}  onChange={(_: any, value) => {
                 onChangeField(index, key, value)
             }} />
@@ -143,18 +146,11 @@ export default function JSONArrayInput (props: JSONInputProps) {
 
     function makeSchemaInput (index: number, key: string, it: APIParameter, schema: any) {
 
-        // console.log(it, schema);
-
-        // if(schema.type?.$ref) {
-        //     <SubObjectInput inputValues={subInputValues} item={it.type} schema={schema} onChange={(_, value) => {
-        //         onChangeField(index, inputItem.key, value)
-        //     }} />
-        // )}              
         
         it = {...it, name: key}
         const arrayInputValues = clone(getFieldValue(index, key))
 
-        if(schema && it.schema.type === 'array') {
+        if(schema && itemType === 'array') {
             return <JSONArrayInput item={{...schema, name: key}}  inputValues={arrayInputValues}  schema={schema} onChange={(_, value) => {
                 onChangeField(index, key, value)
             }} />
@@ -197,13 +193,15 @@ export default function JSONArrayInput (props: JSONInputProps) {
                     <hr style={{border: 'none', borderTop: '1px solid #ececec'}} />                       
                     {inputList.map(inputItem => {
                         const it = inputItem.value as APIParameter; 
+                        const itemType = it.schema?.type || it.type;
+
                         let schema = null; 
-                        if (it.schema.type === 'array') {
+                        if (itemType === 'array') {
                             if (it.items.$ref) {
-                                schema = getDefinitions(it.items, responseObject.definitions)
+                                schema = getDefinitions(it.items, responseObject.definitions || json.components)
                             }
                         } else if (it.$ref) {
-                            schema = getDefinitions(it, responseObject.definitions)            
+                            schema = getDefinitions(it, responseObject.definitions || json.components)            
                         }
 
                         const hasSchema = Boolean(schema)
