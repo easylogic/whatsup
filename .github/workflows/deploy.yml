@@ -22,7 +22,7 @@ jobs:
         node-version: 18 # 버전은 입맛대로 바꾸세요
 
     - run: npm install pnpm -g # pnpm 을 설치합니다.
-    - run: pnpm install # package.json에 있는 의존성을 설치합니다.
+    - run: pnpm install --frozen-lockfile # package.json에 있는 의존성을 설치합니다.
     - run: pnpm build # package.json에 빌드 스크립트를 여기 적으세요
     
     # publish_dir에 들어있는 파일들을 gh-pages 브랜치에 올려줍니다.
