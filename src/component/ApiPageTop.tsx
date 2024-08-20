@@ -54,7 +54,7 @@ function ApiPageTop() {
               },
               {
                   path: 'host',
-                  breadcrumbName: `https://${json.servers?.[0]?.url}`,
+                  breadcrumbName:  json.host ?  `https://${json.host}` : `${json.servers?.[0]?.url}`,
               },
             ]}}
         >
