@@ -74,7 +74,7 @@ export default function JSONObjectInput (props: JSONInputProps) {
 
         try {
             onChange(item.name, JSON.parse(e.target.value))
-        } catch (e) {
+        } catch (e: any) {
             console.log(`json string's build is failed`, e.message);
         }
 

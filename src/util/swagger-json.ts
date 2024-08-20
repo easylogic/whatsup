@@ -8,6 +8,7 @@ export interface CategoryInterface {
     tags: any[];
     title: string;
     description: string;
+    host: string;
     servers: {
       url: string;
     }[];

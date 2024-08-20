@@ -92,8 +92,7 @@ function App() {
         definitions: json.definitions,
         api
       });
-     }  catch (e) {
-      console.log(e, e.request, e.response);
+     }  catch (e: any) {
       setResponseObject({
         api,
         requestObject: e.request, 
