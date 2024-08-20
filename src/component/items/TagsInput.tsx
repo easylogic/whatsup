@@ -10,6 +10,7 @@ interface TagsInputProps {
 
 export default function TagsInput (props: TagsInputProps) {
     const { item, inputValues, onChange } = props; 
+    const items = item.schema.items || item.items || {};
 
     function changeFieldValue (value: string[]|number[]) {
         onChange(item.name, value);
@@ -23,14 +24,14 @@ export default function TagsInput (props: TagsInputProps) {
                 onChange={(value) => {
                     value = `${value}`.split(',').filter(Boolean)
 
-                    if (item.items.type === 'integer') {
+                    if (items.type === 'integer') {
                         value = value.map((n: string) => +n)
                     }
 
                     changeFieldValue(value)
                 }}
             >
-                {(item.items.enum || []).map((en:string) => {
+                {(items.enum || []).map((en:string) => {
                     return <Select.Option key={en} value={en}>{en}</Select.Option>
                 })}                
             </Select>

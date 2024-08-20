@@ -70,8 +70,6 @@ function App() {
 
      try {
 
-      console.log(api.method, url, params, headers);
-
       switch(api.method) {
         case 'get': response = await customizedAxios.get(url, { params, headers });  break; 
         case 'post': response = await customizedAxios.post(url, params, { headers } );  break; 

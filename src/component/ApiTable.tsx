@@ -91,7 +91,7 @@ export function ApiTable(props: ApiTableProps) {
 
     const json = getApiJSON(category);       
     const parameters = api?.object?.parameters;
-    const definitions = json.definitions || {}
+    const definitions = json.definitions || {};
 
     const urlKey = `https://${json.host}${json.basePath}${api.path}-${api.method}`
     const SAVE_GLOBAL_INPUT_VALUES_KEY =  `save-${urlKey}`
@@ -172,9 +172,9 @@ export function ApiTable(props: ApiTableProps) {
     function createFormItem (it: APIParameter, rowIndex: number) {
 
         const itemType = it.schema?.type || it.type;
-        let schema = null; 
+        let schema = it.schema || {}; 
         if (itemType === 'array') {
-            if (it.items.$ref) {
+            if (it.items?.$ref) {
                 schema = getDefinitionsSchema(it.items, responseObject.definitions || json.components)
             }
         } else if (it.$ref) {
@@ -213,7 +213,11 @@ export function ApiTable(props: ApiTableProps) {
 
                 {(itemType === 'array' && it.collectionFormat) && (     
                     <TagsInput item={it} inputValues={inputValues} onChange={handleChangeValue} />
-                )}                  
+                )}        
+
+                {(itemType === 'array' && it.schema.items) && (     
+                    <TagsInput item={it} inputValues={inputValues} onChange={handleChangeValue} />
+                )}                                  
 
                 {['number', 'integer', 'float', 'double', 'int32', 'int64'].includes(itemType) && (
                     <NumberInput item={it} inputValues={inputValues} onChange={handleChangeValue} />
