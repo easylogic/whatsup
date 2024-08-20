@@ -33,42 +33,25 @@ export default {
 
 ```
 
-### Start - `yarn start`
+### Start - `pnpm start`
 
 
 ```sh
 git clone https://github.com/easylogic/whatsup 
 cd whatsup
-yarn 
-yarn start 
+pnpm install 
+pnpm start 
 ```
 
-### Change HOST and PORT
 
-To prevent CORS problems, please Add `HOST` and `PORT` to the start script.
 
-```js
-  "scripts": {
-    "start": "HOST=local.your-test-domain.com PORT=5300 react-scripts start --progress",
-  }
-```
-
-And you can edit the hosts file.
+### Build - `pnpm build`
 
 ```sh
-vi /etc/hosts
-
-127.0.0.1   local.your-test-domain.com 
-
+pnpm build
 ```
 
-### Build - `yarn build`
-
-```sh
-yarn build
-```
-
-After executing yarn build, SPA related files are created in the build directory.
+After executing pnpm build, SPA related files are created in the build directory.
 
 Use this output if you want to deploy to a specific static server.
 
