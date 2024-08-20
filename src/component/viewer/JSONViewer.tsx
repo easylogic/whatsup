@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Tabs, Tag } from 'antd';
-import ReactJson from 'react-json-view'
+import JsonView from '@uiw/react-json-view'
 
 
 function copyStringToClipboard(target: string) {
@@ -133,7 +133,7 @@ export default function JSONViewer (props: JSONViewerProps) {
             <Tabs defaultActiveKey="1">
                 <Tabs.TabPane tab="JSON" key="1">
                     <div style={{maxHeight: 500, overflow: 'auto', border: '1px solid #ececec', padding: 10}}>
-                        <ReactJson src={json} />
+                        <JsonView value={json} />
                     </div>
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="Table" key="2">

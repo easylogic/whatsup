@@ -42,14 +42,14 @@ export interface APISummary {
     responses: APIResponse[];
     tags: string[];
     requestBody: {
-        [key: string]: {
-            content: {
-                [key: string]: {
-                    schema: Schema;
-                }
-            },
-            description: string;
-        };
+
+        content: {
+            [key: string]: {
+                schema: Schema;
+            }
+        },
+        description: string;
+        required: boolean;
     };
     operationId: string;
 }

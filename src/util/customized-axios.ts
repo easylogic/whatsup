@@ -16,7 +16,7 @@ curlirize(customizedAxios, (result, err) => {
 });
 
 customizedAxios.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
+  (config) => {
 
     // TODO: hook for authorization  
 

@@ -215,7 +215,7 @@ export function ApiTable(props: ApiTableProps) {
                     <TagsInput item={it} inputValues={inputValues} onChange={handleChangeValue} />
                 )}        
 
-                {(itemType === 'array' && it.schema.items) && (     
+                {(itemType === 'array' && (it.schema?.items || it.items)) && (     
                     <TagsInput item={it} inputValues={inputValues} onChange={handleChangeValue} />
                 )}                                  
 
@@ -252,8 +252,6 @@ export function ApiTable(props: ApiTableProps) {
 
         if (it.content) {
             schema = getDefinitions(getContentSchema(it.content), responseObject.definitions || json.components);
-        } else {
-            schema = getDefinitions(it.schema, responseObject.definitions || json.components);
         }
         
         const inputValues = {...(getFieldValue('requestBody') || {})}

@@ -150,7 +150,7 @@ export default function ObjectInput (props: ObjectInputProps) {
                     )}                  
 
                     {(itemType === 'array' && it.items && it.items.type) && (     
-                        <TagsInput item={it} inputValues={localInputValues[it.name]} onChange={onChangeField} />
+                        <div><TagsInput item={it} inputValues={localInputValues[it.name]} onChange={onChangeField} /></div>
                     )} 
 
                     {(itemType === 'array' && it.items && (it.items.$ref || it.items.properties)) && (     

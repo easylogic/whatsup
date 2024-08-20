@@ -16,11 +16,15 @@ export default function TagsInput (props: TagsInputProps) {
         onChange(item.name, value);
     }
 
-    return <Select 
-                mode="tags" 
+    return <div><Select 
+                mode="multiple" 
                 style={{ width: '100%' }} 
                 placeholder={item.description} 
                 value={inputValues || []}
+                allowClear
+                options={(items.enum || []).map((en:string) => {
+                    return { value: en, label: en}
+                }) || []}
                 onChange={(value) => {
                     value = `${value}`.split(',').filter(Boolean)
 
@@ -30,10 +34,7 @@ export default function TagsInput (props: TagsInputProps) {
 
                     changeFieldValue(value)
                 }}
-            >
-                {(items.enum || []).map((en:string) => {
-                    return <Select.Option key={en} value={en}>{en}</Select.Option>
-                })}                
-            </Select>
+            />      
+            </div>
 
 }

@@ -1,11 +1,12 @@
 import React from 'react';
-import { Layout, Tag, Alert, PageHeader } from 'antd';
+import { Layout, Tag, Alert, Breadcrumb } from 'antd';
 import ReactMarkdown from "react-markdown";
 import { useRecoilValue } from 'recoil';
 import { apiViewState, categoryViewState, } from '../state/response-state';
 import { 
   getApiJSON
 } from '../util/get-definitions';
+
 
 const { Content } = Layout 
 
@@ -31,13 +32,14 @@ function ApiPageTop() {
 
   return (
     <>
-        <Alert message={<ReactMarkdown source={json.description}/>} type="info" />
+        <Alert type="info" message={<ReactMarkdown>{json.description}</ReactMarkdown>} />
         <div>&nbsp;</div>
-        <PageHeader
+        <div
             className="site-page-header"
             style={{ marginBottom: 10, backgroundColor: 'white'}}
-            title={(
-              <div>
+        >
+
+            <div>
                 <div>
                   <Tag color="purple">Controller</Tag> {api.object?.tags.map(tag => {
                     const tagInfo = json.tags.find(it => it.name === tag);
@@ -45,19 +47,20 @@ function ApiPageTop() {
                   })}
                 </div>
                 <div>{getTag(api.method)} {json.basePath}{api.path}</div>  
-              </div>
-            )}
-            breadcrumb={{ routes: [
-              {
-                  path: 'index',
-                  breadcrumbName: `${json.title}`,
-              },
-              {
-                  path: 'host',
-                  breadcrumbName:  json.host ?  `https://${json.host}` : `${json.servers?.[0]?.url}`,
-              },
-            ]}}
-        >
+            </div>
+
+                  <Breadcrumb routes={[
+                      {
+                          path: 'index',
+                          breadcrumbName: `${json.title}`,
+                      },
+                      {
+                          path: 'host',
+                          breadcrumbName:  json.host ?  `https://${json.host}` : `${json.servers?.[0]?.url}`,
+                      },
+                    ]} />
+
+
             <Content>
 
             <div style={{
@@ -69,7 +72,7 @@ function ApiPageTop() {
             </div>
 
             </Content>  
-        </PageHeader>
+        </div>
     </>
   );
 }

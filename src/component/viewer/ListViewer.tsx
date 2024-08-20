@@ -1,6 +1,6 @@
 import React from 'react';
 import { List } from 'antd';
-import ReactJson from 'react-json-view';
+import JsonView from '@uiw/react-json-view'
 
 interface ListViewerProps {
     title?: string;
@@ -24,7 +24,7 @@ export default function ListViewer (props: ListViewerProps) {
                             <List.Item.Meta
                                 avatar={`${item.code}`}
                                 title={`${item.description}`}
-                                description={(Array.isArray(item.schema)) ? <ReactJson src={item.schema} /> : <ReactJson name={name} src={item.schema?.[name] || item.schema} />}
+                                description={(Array.isArray(item.schema)) ? <JsonView value={item.schema} /> : <JsonView value={item.schema?.[name] || item.schema} />}
                             />
                         </List.Item>
                     )
