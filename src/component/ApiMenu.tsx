@@ -84,8 +84,10 @@ function ApiMenu() {
                     }} style={{
                         margin: 0
                     }}>
+                      <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                        <span>{obj.path}</span>
                         {getTag(obj.method)}
-                        {obj.path}
+                        </div>
                     </Menu.Item>    
                     ) 
                 })}                  
